@@ -2,8 +2,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,28 +20,48 @@ public class BattleShip extends JFrame
 	JPanel left;
 	JPanel right;
 
+	JLabel log=new JLabel("Log:");
+	JButton selectFileButton=new JButton("Select File...");
+	JLabel fileName=new JLabel("File:");
+	JButton startButton = new JButton("START");
+	
 	public BattleShip()
 	{
 		setTitle("BattleShip");
 		setLayout(new BorderLayout());
-		setSize(600,400);
+		setSize(640,490);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel north=new JPanel(new BorderLayout());
+		JPanel north=new JPanel(new FlowLayout(FlowLayout.CENTER));
+		north.add(new JLabel("PLAYER                                                                    COMPUTER"));
+		add(north,BorderLayout.NORTH);
 		
 		JPanel center=new JPanel(new FlowLayout());//center holds the left and right grids
-		left=new JPanel(new GridLayout(11, 11, 12, 16));
+		left=new JPanel(new GridLayout(11, 11, 15, 20));
 		left.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		setLeftGrid();
-		right=new JPanel(new GridLayout(11, 11, 12, 16));
+		right=new JPanel(new GridLayout(11, 11, 15, 20));
 		right.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		setRightGrid();
+		gridLabelListener();
 		center.add(left);
 		center.add(right);
 		add(center,BorderLayout.CENTER);
 		
-		JPanel south=new JPanel(new FlowLayout());//holds buttons to select file and start
+		JPanel south=new JPanel(/*new BorderLayout()*/);//holds buttons to select file and start
+		JPanel southLeft=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel southRight=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		southLeft.add(log);
+		southRight.add(selectFileButton);
+		southRight.add(fileName);
+		southRight.add(startButton);
+		south.add(southLeft/*,BorderLayout.WEST*/);
+		south.add(southRight/*,BorderLayout.EAST*/);
+		add(south,BorderLayout.SOUTH);
+
+
+
 		
 		
 		
@@ -94,7 +117,7 @@ public class BattleShip extends JFrame
 		{
 			for(int j=0;j<11;j++)
 			{
-				rightGrid[i][j]=new GridLabel(i,j);
+				rightGrid[i][j]=new GridLabel(i+1,j);
 				rightGrid[i][j].setText("?");//initialize all question marks initially
 			}
 		}
@@ -152,7 +175,35 @@ public class BattleShip extends JFrame
 			}
 		}
 	}
+	//action listener for the gridlabels
+	private void gridLabelListener()
+	{
 
+		for(int i=0;i<11;i++)
+		{
+			for (int j=0;j <11; j++)
+			{
+				final int i1=i;
+				final int j1=j;
+				rightGrid[i][j].addMouseListener(new MouseListener()
+				{
+					public void mouseClicked(MouseEvent e)
+					{
+						if(rightGrid[i1][j1].press)
+						{
+							System.out.println("The coordinates are"+ rightGrid[i1][j1].x+rightGrid[i1][j1].y);
+						}
+					}
+					public void mouseEntered(MouseEvent e){}
+					public void mouseExited(MouseEvent e){}
+					public void mousePressed(MouseEvent e){}
+					public void mouseReleased(MouseEvent e){}
+				});
+			}
+		}
+	}
+	
+	//==============================================================
 	public static void main(String[] args)
 	{
 		System.out.println("hello");
