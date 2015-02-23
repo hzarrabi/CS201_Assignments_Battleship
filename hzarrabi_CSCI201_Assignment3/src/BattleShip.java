@@ -15,11 +15,15 @@ import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 
@@ -38,8 +42,11 @@ public class BattleShip extends JFrame
 	JLabel fileName=new JLabel("File:");
 	JButton startButton = new JButton("START");
 	
-	//components for selecting ship
-	
+	//for the ship placement
+	int carriers=0;
+	int battlships=0;
+	int cruisers=0;
+	int destroyers=0;
 	
 	public BattleShip()
 	{
@@ -82,7 +89,7 @@ public class BattleShip extends JFrame
 
 
 
-		
+		new shipPlacerWindow("g3");
 		
 		
 		setVisible(true);
@@ -287,6 +294,134 @@ public class BattleShip extends JFrame
 		
 	}
 	
+	public class shipPlacerWindow extends JFrame
+	{
+		
+		int x;//this will hold the x coordinate of what we're editing
+		int y;//this will hold y
+		
+		private JComboBox<String> shipList = new JComboBox<String>();
+		
+		private JRadioButton North= new JRadioButton("North");
+		private JRadioButton South= new JRadioButton("South");
+		private JRadioButton East= new JRadioButton("East");
+		private JRadioButton West= new JRadioButton("West");
+		
+		JButton placeShip=new JButton("Place Ship");
+		
+		public shipPlacerWindow(String coordinates)
+		{
+			setTitle("Select ship at "+ coordinates);
+			setSize(300,200);
+			setLocationRelativeTo(null);
+			setLayout(new BorderLayout());
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			
+			//making the panel with the combo box
+			JPanel top = new JPanel();
+			top.add(new JLabel("Select Ship:"));
+			shipList.addItem("Aircraft Carrier");
+			shipList.addItem("Battleship");
+			shipList.addItem("Cruiser");
+			shipList.addItem("Destroyer");
+			top.add(shipList);
+			
+			JPanel middle = new JPanel();
+			middle.setLayout(new GridLayout(2,2));
+			ButtonGroup directions = new ButtonGroup();
+			directions.add(North);//adding buttons to group
+			directions.add(South);
+			directions.add(East);
+			directions.add(West);
+			middle.add(North);
+			middle.add(South);
+			middle.add(East);
+			middle.add(West);
+			
+
+			add(top,BorderLayout.NORTH);
+			add(middle,BorderLayout.CENTER);
+			add(placeShip,BorderLayout.SOUTH);
+			
+			setVisible(true);
+		}
+		
+		//this function is decides whether the button is valid or not
+		private void IsValid()
+		{
+			int range=0;//this is the range of the ship selected
+			
+			try
+			{
+				String ship=(String) shipList.getSelectedItem();//returns what kind of ship is selected in combobox
+				//setting the range based on what kind of ship selected
+				if(ship.equals("Aircraft Carrier")) range=5;
+				else if(ship.equals("Battleship")) range=4;
+				else if(ship.equals("Cruiser")) range=3;
+				else if(ship.equals("Destroyer")) range=2;
+				
+				if(North.isSelected())
+				{
+					if(range>y) throw new Exception();//checking to make sure we're not out of range
+					else
+					{
+						int yTest=y;
+						for(int i=0;i<range;i++)
+						{
+							if(compGrid[x][yTest]!='X') throw new Exception();//throws an exception if there is a ship already in position
+							yTest--;	
+						}
+					}
+				}
+				else if(South.isSelected())
+				{
+					if(range+y>10) throw new Exception();
+					else
+					{
+						int yTest=y;
+						for(int i=0;i<range;i++)
+						{
+							if(compGrid[x][yTest]!='X') throw new Exception();//throws an exception if there is a ship already in position
+							yTest++;	
+						}
+					}
+				}
+				else if(East.isSelected())
+				{
+					if(range>x) throw new Exception();
+					else
+					{
+						int xTest=x;
+						for(int i=0;i<range;i++)
+						{
+							if(compGrid[x][xTest]!='X') throw new Exception();//throws an exception if there is a ship already in position
+							xTest--;	
+						}
+					}
+				}
+				else if(West.isSelected())
+				{
+					if(range+x>10)throw new Exception();
+					else
+					{
+						int xTest=x;
+						for(int i=0;i<range;i++)
+						{
+							if(compGrid[x][xTest]!='X') throw new Exception();//throws an exception if there is a ship already in position
+							xTest++;	
+						}
+					}
+				}
+				else throw new Exception();
+			}
+			
+			catch (Exception e)
+			{
+				placeShip.setEnabled(false);//disabling the button if something is wrong
+			}
+			placeShip.setEnabled(false);
+		}
+	}
 	
 	
 	
