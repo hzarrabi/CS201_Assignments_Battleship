@@ -1,21 +1,34 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class BattleShip extends JFrame
 {
 	private JLabel leftGrid[][]=new JLabel[11][11];
 	private GridLabel rightGrid[][]=new GridLabel[11][11];
+	private char compGrid[][]=new char[10][10];
+	private char useGrid[][]=new char[10][10];
 	
 	JPanel left;
 	JPanel right;
@@ -24,6 +37,9 @@ public class BattleShip extends JFrame
 	JButton selectFileButton=new JButton("Select File...");
 	JLabel fileName=new JLabel("File:");
 	JButton startButton = new JButton("START");
+	
+	//components for selecting ship
+	
 	
 	public BattleShip()
 	{
@@ -49,16 +65,20 @@ public class BattleShip extends JFrame
 		center.add(right);
 		add(center,BorderLayout.CENTER);
 		
-		JPanel south=new JPanel(/*new BorderLayout()*/);//holds buttons to select file and start
+		JPanel south=new JPanel(new BorderLayout());//holds buttons to select file and start
 		JPanel southLeft=new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JPanel southRight=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel southRight=new JPanel(new FlowLayout(FlowLayout.LEFT));
+		
 		southLeft.add(log);
 		southRight.add(selectFileButton);
 		southRight.add(fileName);
 		southRight.add(startButton);
-		south.add(southLeft/*,BorderLayout.WEST*/);
-		south.add(southRight/*,BorderLayout.EAST*/);
+		startButton.setEnabled(false);
+		
+		south.add(southLeft,BorderLayout.WEST);
+		south.add(southRight,BorderLayout.EAST);
 		add(south,BorderLayout.SOUTH);
+		selectFileListener();
 
 
 
@@ -202,6 +222,74 @@ public class BattleShip extends JFrame
 			}
 		}
 	}
+	//action listener for select file
+	private void selectFileListener()
+	{
+		selectFileButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if(e.getSource()==selectFileButton)//if we click that button
+				{
+					JFileChooser fc= new JFileChooser();
+					
+					FileNameExtensionFilter filter = new FileNameExtensionFilter("Battle Files (*.battle)", "battle"); //filter to only allow .battle files
+					fc.setFileFilter(filter);//making our chooser take that filter
+					fc.setAcceptAllFileFilterUsed(false);//will only allow battle files
+					
+					int returnVal=fc.showOpenDialog(selectFileButton);//opens up fileSelector
+					
+					if(returnVal==fc.APPROVE_OPTION)//if we selected a file
+					{
+						selectFileButton.setVisible(false);//removing the select file button
+						System.out.println("i did one thing lol");
+						
+						//getting the fileName without extenstion to change JLabel
+						String fileName=fc.getSelectedFile().getName();
+						int pos = fileName.lastIndexOf(".");
+						if (pos > 0) {
+						    fileName = fileName.substring(0, pos);
+						}
+						BattleShip.this.fileName.setText("File:" + fileName);
+						
+						//reading the file
+						try
+						{
+							FileReader fr = new FileReader(fc.getSelectedFile());//make a file object for reading
+							BufferedReader br = new BufferedReader(fr); //make a buffer to go line by line
+							
+							//reading in from the buffer
+							for(int i=0;i<10;i++)
+							{
+								String buffer = br.readLine();//reading in line
+								char[] charArray = buffer.toCharArray();//making it into char array
+								for(int j=0;j<10;j++)
+								{
+									compGrid[i][j]=charArray[j];
+								}
+							}
+						} 
+						catch (FileNotFoundException e1)
+						{
+							//we know the file is there so don't worry
+						} 
+						catch (IOException ioe) 
+						{}
+				        System.out.println("done");
+						
+					}
+				}
+				
+			}
+		});
+		
+	}
+	
+	
+	
+	
 	
 	//==============================================================
 	public static void main(String[] args)
