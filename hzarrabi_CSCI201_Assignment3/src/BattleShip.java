@@ -1,3 +1,5 @@
+import hzarrabi_CSCI201_Assignment3.CantAddShipException;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -29,10 +31,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class BattleShip extends JFrame
 {
-	private JLabel leftGrid[][]=new JLabel[11][11];
+	private GridLabel leftGrid[][]=new GridLabel[11][11];
 	private GridLabel rightGrid[][]=new GridLabel[11][11];
-	private char compGrid[][]=new char[10][10];
-	private char useGrid[][]=new char[10][10];
+	private char compGrid[][]=new char[10][10];//this is the one we click on
+	private char userGrid[][]=new char[10][10];//this is the one the computer guesses 
 	
 	JPanel left;
 	JPanel right;
@@ -50,6 +52,8 @@ public class BattleShip extends JFrame
 	
 	public BattleShip()
 	{
+		fillUserGrid();//this will instantiate userArray with X's
+		
 		setTitle("BattleShip");
 		setLayout(new BorderLayout());
 		setSize(640,490);
@@ -89,10 +93,22 @@ public class BattleShip extends JFrame
 
 
 
-		new shipPlacerWindow("g3");
+		new shipPlacerWindow(7,7);
 		
 		
 		setVisible(true);
+	}
+	
+	//fills the userGrid array with x's
+	private void fillUserGrid()
+	{
+		for(int i=0;i<10;i++)
+		{
+			for(int j=0;j<10;j++)
+			{
+				userGrid[i][j]='X';
+			}
+		}
 	}
 	
 	//makes the ?s for the left grid
@@ -102,31 +118,54 @@ public class BattleShip extends JFrame
 		{
 			for(int j=0;j<11;j++)
 			{
-				leftGrid[i][j]=new JLabel();
+				leftGrid[i][j]=new GridLabel(i+1,j);
 				leftGrid[i][j].setText("?");//initialize all question marks initially
 			}
 		}
 		leftGrid[0][0].setText("A");
+		leftGrid[0][0].press=false;
 		leftGrid[1][0].setText("B");
+		leftGrid[1][0].press=false;
 		leftGrid[2][0].setText("C");
+		leftGrid[2][0].press=false;
 		leftGrid[3][0].setText("D");
+		leftGrid[3][0].press=false;
 		leftGrid[4][0].setText("E");
+		leftGrid[4][0].press=false;
 		leftGrid[5][0].setText("F");
+		leftGrid[5][0].press=false;
 		leftGrid[6][0].setText("G");
+		leftGrid[6][0].press=false;
 		leftGrid[7][0].setText("H");
+		leftGrid[7][0].press=false;
 		leftGrid[8][0].setText("I");
+		leftGrid[8][0].press=false;
 		leftGrid[9][0].setText("J");
+		leftGrid[9][0].press=false;
 		leftGrid[10][0].setText(" ");
+		leftGrid[10][0].press=false;
+
+		
 		leftGrid[10][1].setText("1");
+		leftGrid[10][1].press=false;
 		leftGrid[10][2].setText("2");
+		leftGrid[10][2].press=false;
 		leftGrid[10][3].setText("3");
+		leftGrid[10][3].press=false;
 		leftGrid[10][4].setText("4");
+		leftGrid[10][4].press=false;
 		leftGrid[10][5].setText("5");
+		leftGrid[10][5].press=false;
 		leftGrid[10][6].setText("6");
+		leftGrid[10][6].press=false;
 		leftGrid[10][7].setText("7");
+		leftGrid[10][7].press=false;
 		leftGrid[10][8].setText("8");
+		leftGrid[10][8].press=false;
 		leftGrid[10][9].setText("9");
+		leftGrid[10][9].press=false;
 		leftGrid[10][10].setText("10");
+		leftGrid[10][10].press=false;
 		
 		//adding the labels
 		for (int i=0;i<11;i++)
@@ -228,6 +267,29 @@ public class BattleShip extends JFrame
 				});
 			}
 		}
+		
+		for(int i=0;i<11;i++)
+		{
+			for (int j=0;j <11; j++)
+			{
+				final int i1=i;
+				final int j1=j;
+				leftGrid[i][j].addMouseListener(new MouseListener()
+				{
+					public void mouseClicked(MouseEvent e)
+					{
+						if(leftGrid[i1][j1].press)
+						{
+							System.out.println("The coordinates are"+ leftGrid[i1][j1].x+leftGrid[i1][j1].y);
+						}
+					}
+					public void mouseEntered(MouseEvent e){}
+					public void mouseExited(MouseEvent e){}
+					public void mousePressed(MouseEvent e){}
+					public void mouseReleased(MouseEvent e){}
+				});
+			}
+		}
 	}
 	//action listener for select file
 	private void selectFileListener()
@@ -309,9 +371,12 @@ public class BattleShip extends JFrame
 		
 		JButton placeShip=new JButton("Place Ship");
 		
-		public shipPlacerWindow(String coordinates)
+		public shipPlacerWindow(int x,int y)
 		{
-			setTitle("Select ship at "+ coordinates);
+			this.x=x-1;//making the coordinate into index value so u subtract by one
+			this.y=y-1;
+			
+			setTitle("Select ship at "+ getCharForNumber(x)+y);
 			setSize(300,200);
 			setLocationRelativeTo(null);
 			setLayout(new BorderLayout());
@@ -343,13 +408,24 @@ public class BattleShip extends JFrame
 			add(middle,BorderLayout.CENTER);
 			add(placeShip,BorderLayout.SOUTH);
 			
+			IsValid();//be careful you don't use isValid() because that's a another function that belongs to JFrame (this initially disables the button becase no radio buttons are selected
+			everyThingListener();//this is the listener for everything 
+			
+			
 			setVisible(true);
 		}
 		
+		//this function converts numbers to chars
+		private String getCharForNumber(int i) {
+		    return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
+		}
+		
+		
 		//this function is decides whether the button is valid or not
 		private void IsValid()
-		{
+		{			
 			int range=0;//this is the range of the ship selected
+			placeShip.setEnabled(true);
 			
 			try
 			{
@@ -362,68 +438,125 @@ public class BattleShip extends JFrame
 				
 				if(North.isSelected())
 				{
-					if(range>y) throw new Exception();//checking to make sure we're not out of range
+					if(range>y) throw new CantAddShipException();//checking to make sure we're not out of range
 					else
 					{
 						int yTest=y;
 						for(int i=0;i<range;i++)
 						{
-							if(compGrid[x][yTest]!='X') throw new Exception();//throws an exception if there is a ship already in position
+							if(userGrid[x][yTest]!='X')
+							{
+								throw new CantAddShipException();//throws an exception if there is a ship already in position
+							}
 							yTest--;	
 						}
 					}
 				}
 				else if(South.isSelected())
 				{
-					if(range+y>10) throw new Exception();
+					if(range+y>10)
+					{
+						System.out.println(range+"range");
+						System.out.println(y+"y");
+						System.out.println("fadsfadsfasfasf");
+						throw new CantAddShipException();
+					}
 					else
 					{
 						int yTest=y;
 						for(int i=0;i<range;i++)
 						{
-							if(compGrid[x][yTest]!='X') throw new Exception();//throws an exception if there is a ship already in position
+							if(userGrid[x][yTest]!='X') throw new CantAddShipException();//throws an exception if there is a ship already in position
 							yTest++;	
 						}
 					}
 				}
 				else if(East.isSelected())
 				{
-					if(range>x) throw new Exception();
+					if(range+x>10)
+					{
+						System.out.println("out of range east");
+						throw new CantAddShipException();
+					}
 					else
 					{
 						int xTest=x;
 						for(int i=0;i<range;i++)
 						{
-							if(compGrid[x][xTest]!='X') throw new Exception();//throws an exception if there is a ship already in position
-							xTest--;	
+							
+							if(userGrid[x][xTest]!='X')
+							{
+								System.out.println("nottt x east?");
+								throw new CantAddShipException();//throws an exception if there is a ship already in position
+							}
+							xTest++;	
 						}
 					}
 				}
 				else if(West.isSelected())
 				{
-					if(range+x>10)throw new Exception();
+					if(range>x+1)throw new CantAddShipException();//x+1 to make up for x being turned into index
 					else
 					{
 						int xTest=x;
 						for(int i=0;i<range;i++)
 						{
-							if(compGrid[x][xTest]!='X') throw new Exception();//throws an exception if there is a ship already in position
-							xTest++;	
+							if(userGrid[x][xTest]!='X')throw new CantAddShipException();//throws an exception if there is a ship already in position
+							xTest--;	
 						}
 					}
 				}
-				else throw new Exception();
+				else 
+				{
+					throw new CantAddShipException();
+				}
 			}
-			
-			catch (Exception e)
+			catch (CantAddShipException e)
 			{
 				placeShip.setEnabled(false);//disabling the button if something is wrong
 			}
-			placeShip.setEnabled(false);
+		}
+	
+		//this function adds all the listeners for to see if selection is valid and for button adding ship
+		private void everyThingListener()
+		{
+			//the listener for the JComboBox
+			shipList.addActionListener (new ActionListener () {
+			    public void actionPerformed(ActionEvent e) {
+					System.out.println("yooo");
+			        IsValid();
+			    }
+			});
+			North.addActionListener (new ActionListener () {
+			    public void actionPerformed(ActionEvent e) {
+					System.out.println("yooo");
+			        IsValid();
+			    }
+			});
+			South.addActionListener (new ActionListener () {
+			    public void actionPerformed(ActionEvent e) {
+					System.out.println("yooo");
+			        IsValid();
+			    }
+			});
+			West.addActionListener (new ActionListener () {
+			    public void actionPerformed(ActionEvent e) {
+					System.out.println("yooo");
+			        IsValid();
+			    }
+			});
+			East.addActionListener (new ActionListener () {
+			    public void actionPerformed(ActionEvent e) {
+					System.out.println("yooo");
+			        IsValid();
+			    }
+			});
+			
+			
 		}
 	}
 	
-	
+		
 	
 	
 	//==============================================================
