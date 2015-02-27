@@ -280,13 +280,11 @@ public class BattleShip extends JFrame
 						{
 							if(userGrid[leftGrid[i1][j1].x-1][leftGrid[i1][j1].y-1]=='X')//if the coordinate has no ship placed
 							{
-								System.out.println("The coordinates are"+ leftGrid[i1][j1].x+leftGrid[i1][j1].y);
+								if(carriers+battlships+cruisers+destroyers<5)//if we still have ships to place open the window
 								new shipPlacerWindow(leftGrid[i1][j1].x,leftGrid[i1][j1].y);
 							}
 							else
 							{
-								System.out.println("get's called?");
-								System.out.println("else" + (leftGrid[i1][j1].y-1));
 								shipDeleter(leftGrid[i1][j1].x-1, leftGrid[i1][j1].y-1);;
 							}
 						}
