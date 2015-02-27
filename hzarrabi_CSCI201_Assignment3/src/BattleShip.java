@@ -21,6 +21,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -261,7 +262,18 @@ public class BattleShip extends JFrame
 					{
 						if(rightGrid[i1][j1].press)
 						{
-							System.out.println("The coordinates are"+ rightGrid[i1][j1].x+rightGrid[i1][j1].y);
+							if(editMode==true)
+							{
+								//do nothing to the right grid in edit mode
+							}
+							else//when we're in playing mode then we want to play!!!!
+							{
+								System.out.println("The coordinates are"+ rightGrid[i1][j1].x+rightGrid[i1][j1].y);
+								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X')
+								{
+									System.out.println(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]);
+								}
+							}
 						}
 					}
 					public void mouseEntered(MouseEvent e){}
@@ -285,15 +297,22 @@ public class BattleShip extends JFrame
 					{
 						if(leftGrid[i1][j1].press)
 						{
-							if(userGrid[leftGrid[i1][j1].x-1][leftGrid[i1][j1].y-1]=='X')//if the coordinate has no ship placed
-							{
-								if(carriers+battlships+cruisers+destroyers<5)//if we still have ships to place open the window
-								new shipPlacerWindow(leftGrid[i1][j1].x,leftGrid[i1][j1].y);
-							}
-							else
-							{
-								shipDeleter(leftGrid[i1][j1].x-1, leftGrid[i1][j1].y-1);;
-							}
+						    if(editMode==true)//we only want this functionality if we are in edit mode
+						    {
+								if(userGrid[leftGrid[i1][j1].x-1][leftGrid[i1][j1].y-1]=='X')//if the coordinate has no ship placed
+								{
+									if(carriers+battlships+cruisers+destroyers<5)//if we still have ships to place open the window
+									new shipPlacerWindow(leftGrid[i1][j1].x,leftGrid[i1][j1].y);
+								}
+								else
+								{
+									shipDeleter(leftGrid[i1][j1].x-1, leftGrid[i1][j1].y-1);;
+								}
+						    }
+						    else//if we are in playing mode do this
+						    {
+						    	//we shouldn't be able to do anything to the left grid but i'll just do this incase
+						    }
 						}
 					}
 					public void mouseEntered(MouseEvent e){}
@@ -502,13 +521,13 @@ public class BattleShip extends JFrame
 							BufferedReader br = new BufferedReader(fr); //make a buffer to go line by line
 							
 							//reading in from the buffer
-							for(int i=0;i<10;i++)
+							for(int j=0;j<10;j++)
 							{
 								String buffer = br.readLine();//reading in line
 								char[] charArray = buffer.toCharArray();//making it into char array
-								for(int j=0;j<10;j++)
+								for(int i=0;i<10;i++)
 								{
-									compGrid[i][j]=charArray[j];
+									compGrid[i][j]=charArray[i];
 								}
 							}
 						} 
@@ -521,6 +540,10 @@ public class BattleShip extends JFrame
 				        System.out.println("selected file");
 				        
 				        selectedFile=true;
+				        if(carriers+battlships+cruisers+destroyers==5 && selectedFile)//if all ships places and file selected 
+				        {
+				        	startButton.setEnabled(true);
+				        }
 					}
 				}
 				
@@ -529,7 +552,7 @@ public class BattleShip extends JFrame
 		
 	}
 	
-	public class shipPlacerWindow extends JFrame
+	public class shipPlacerWindow extends JDialog
 	{
 		
 		int x;//this will hold the x coordinate of what we're editing
@@ -584,6 +607,7 @@ public class BattleShip extends JFrame
 			IsValid();//be careful you don't use isValid() because that's a another function that belongs to JFrame (this initially disables the button becase no radio buttons are selected
 			everyThingListener();//this is the listener for everything 
 			
+			setModal(true);//this prevents us from accessing the board behind it
 			
 			setVisible(true);
 		}
@@ -813,7 +837,7 @@ public class BattleShip extends JFrame
 								xTest--;	
 							}
 					}		
-				if(carriers+battlships+cruisers+destroyers==5)//if they chose all ships
+				if(carriers+battlships+cruisers+destroyers==5 && selectedFile)//if they chose all ships
 				{ 
 					startButton.setEnabled(true);
 				}
@@ -823,6 +847,7 @@ public class BattleShip extends JFrame
 			});
 		}
 	}
+
 	
 		
 	
