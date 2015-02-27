@@ -114,63 +114,63 @@ public class BattleShip extends JFrame
 	//makes the ?s for the left grid
 	private void setLeftGrid()
 	{
-		for (int i=0;i<11;i++)
+		for (int j=0;j<11;j++)
 		{
-			for(int j=0;j<11;j++)
+			for(int i=0;i<11;i++)
 			{
-				leftGrid[i][j]=new GridLabel(i+1,j);
+				leftGrid[i][j]=new GridLabel(i,j+1);
 				leftGrid[i][j].setText("?");//initialize all question marks initially
 			}
 		}
 		leftGrid[0][0].setText("A");
 		leftGrid[0][0].press=false;
-		leftGrid[1][0].setText("B");
-		leftGrid[1][0].press=false;
-		leftGrid[2][0].setText("C");
-		leftGrid[2][0].press=false;
-		leftGrid[3][0].setText("D");
-		leftGrid[3][0].press=false;
-		leftGrid[4][0].setText("E");
-		leftGrid[4][0].press=false;
-		leftGrid[5][0].setText("F");
-		leftGrid[5][0].press=false;
-		leftGrid[6][0].setText("G");
-		leftGrid[6][0].press=false;
-		leftGrid[7][0].setText("H");
-		leftGrid[7][0].press=false;
-		leftGrid[8][0].setText("I");
-		leftGrid[8][0].press=false;
-		leftGrid[9][0].setText("J");
-		leftGrid[9][0].press=false;
-		leftGrid[10][0].setText(" ");
-		leftGrid[10][0].press=false;
+		leftGrid[0][1].setText("B");
+		leftGrid[0][1].press=false;
+		leftGrid[0][2].setText("C");
+		leftGrid[0][2].press=false;
+		leftGrid[0][3].setText("D");
+		leftGrid[0][3].press=false;
+		leftGrid[0][4].setText("E");
+		leftGrid[0][4].press=false;
+		leftGrid[0][5].setText("F");
+		leftGrid[0][5].press=false;
+		leftGrid[0][6].setText("G");
+		leftGrid[0][6].press=false;
+		leftGrid[0][7].setText("H");
+		leftGrid[0][7].press=false;
+		leftGrid[0][8].setText("I");
+		leftGrid[0][8].press=false;
+		leftGrid[0][9].setText("J");
+		leftGrid[0][9].press=false;
+		leftGrid[0][10].setText(" ");
+		leftGrid[0][10].press=false;
 
 		
-		leftGrid[10][1].setText("1");
-		leftGrid[10][1].press=false;
-		leftGrid[10][2].setText("2");
-		leftGrid[10][2].press=false;
-		leftGrid[10][3].setText("3");
-		leftGrid[10][3].press=false;
-		leftGrid[10][4].setText("4");
-		leftGrid[10][4].press=false;
-		leftGrid[10][5].setText("5");
-		leftGrid[10][5].press=false;
-		leftGrid[10][6].setText("6");
-		leftGrid[10][6].press=false;
-		leftGrid[10][7].setText("7");
-		leftGrid[10][7].press=false;
-		leftGrid[10][8].setText("8");
-		leftGrid[10][8].press=false;
-		leftGrid[10][9].setText("9");
-		leftGrid[10][9].press=false;
+		leftGrid[1][10].setText("1");
+		leftGrid[1][10].press=false;
+		leftGrid[2][10].setText("2");
+		leftGrid[2][10].press=false;
+		leftGrid[3][10].setText("3");
+		leftGrid[3][10].press=false;
+		leftGrid[4][10].setText("4");
+		leftGrid[4][10].press=false;
+		leftGrid[5][10].setText("5");
+		leftGrid[5][10].press=false;
+		leftGrid[6][10].setText("6");
+		leftGrid[6][10].press=false;
+		leftGrid[7][10].setText("7");
+		leftGrid[7][10].press=false;
+		leftGrid[8][10].setText("8");
+		leftGrid[8][10].press=false;
+		leftGrid[9][10].setText("9");
+		leftGrid[9][10].press=false;
 		leftGrid[10][10].setText("10");
 		leftGrid[10][10].press=false;
 		
 		//adding the labels
-		for (int i=0;i<11;i++)
+		for (int j=0;j<11;j++)
 		{
-			for(int j=0;j<11;j++)
+			for(int i=0;i<11;i++)
 			{
 				left.add(leftGrid[i][j]);
 			}
@@ -179,63 +179,63 @@ public class BattleShip extends JFrame
 	//makes the ?s for the right grid
 	private void setRightGrid()
 	{
-		for (int i=0;i<11;i++)
+		for (int j=0;j<11;j++)
 		{
-			for(int j=0;j<11;j++)
+			for(int i=0;i<11;i++)
 			{
-				rightGrid[i][j]=new GridLabel(i+1,j);
+				rightGrid[i][j]=new GridLabel(i,j+1);
 				rightGrid[i][j].setText("?");//initialize all question marks initially
 			}
 		}
 		rightGrid[0][0].setText("A");
 		rightGrid[0][0].press=false;
-		rightGrid[1][0].setText("B");
-		rightGrid[1][0].press=false;
-		rightGrid[2][0].setText("C");
-		rightGrid[2][0].press=false;
-		rightGrid[3][0].setText("D");
-		rightGrid[3][0].press=false;
-		rightGrid[4][0].setText("E");
-		rightGrid[4][0].press=false;
-		rightGrid[5][0].setText("F");
-		rightGrid[5][0].press=false;
-		rightGrid[6][0].setText("G");
-		rightGrid[6][0].press=false;
-		rightGrid[7][0].setText("H");
-		rightGrid[7][0].press=false;
-		rightGrid[8][0].setText("I");
-		rightGrid[8][0].press=false;
-		rightGrid[9][0].setText("J");
-		rightGrid[9][0].press=false;
-		rightGrid[10][0].setText(" ");
-		rightGrid[10][0].press=false;
+		rightGrid[0][1].setText("B");
+		rightGrid[0][1].press=false;
+		rightGrid[0][2].setText("C");
+		rightGrid[0][2].press=false;
+		rightGrid[0][3].setText("D");
+		rightGrid[0][3].press=false;
+		rightGrid[0][4].setText("E");
+		rightGrid[0][4].press=false;
+		rightGrid[0][5].setText("F");
+		rightGrid[0][5].press=false;
+		rightGrid[0][6].setText("G");
+		rightGrid[0][6].press=false;
+		rightGrid[0][7].setText("H");
+		rightGrid[0][7].press=false;
+		rightGrid[0][8].setText("I");
+		rightGrid[0][8].press=false;
+		rightGrid[0][9].setText("J");
+		rightGrid[0][9].press=false;
+		rightGrid[0][10].setText(" ");
+		rightGrid[0][10].press=false;
 
 		
-		rightGrid[10][1].setText("1");
-		rightGrid[10][1].press=false;
-		rightGrid[10][2].setText("2");
-		rightGrid[10][2].press=false;
-		rightGrid[10][3].setText("3");
-		rightGrid[10][3].press=false;
-		rightGrid[10][4].setText("4");
-		rightGrid[10][4].press=false;
-		rightGrid[10][5].setText("5");
-		rightGrid[10][5].press=false;
-		rightGrid[10][6].setText("6");
-		rightGrid[10][6].press=false;
-		rightGrid[10][7].setText("7");
-		rightGrid[10][7].press=false;
-		rightGrid[10][8].setText("8");
-		rightGrid[10][8].press=false;
-		rightGrid[10][9].setText("9");
-		rightGrid[10][9].press=false;
+		rightGrid[1][10].setText("1");
+		rightGrid[1][10].press=false;
+		rightGrid[2][10].setText("2");
+		rightGrid[2][10].press=false;
+		rightGrid[3][10].setText("3");
+		rightGrid[3][10].press=false;
+		rightGrid[4][10].setText("4");
+		rightGrid[4][10].press=false;
+		rightGrid[5][10].setText("5");
+		rightGrid[5][10].press=false;
+		rightGrid[6][10].setText("6");
+		rightGrid[6][10].press=false;
+		rightGrid[7][10].setText("7");
+		rightGrid[7][10].press=false;
+		rightGrid[8][10].setText("8");
+		rightGrid[8][10].press=false;
+		rightGrid[9][10].setText("9");
+		rightGrid[9][10].press=false;
 		rightGrid[10][10].setText("10");
 		rightGrid[10][10].press=false;
 		
 		//adding the labels
-		for (int i=0;i<11;i++)
+		for (int j=0;j<11;j++)
 		{
-			for(int j=0;j<11;j++)
+			for(int i=0;i<11;i++)
 			{
 				right.add(rightGrid[i][j]);
 			}
@@ -369,7 +369,7 @@ public class BattleShip extends JFrame
 		private JRadioButton East= new JRadioButton("East");
 		private JRadioButton West= new JRadioButton("West");
 		
-		JButton placeShip=new JButton("Place Ship");
+		private JButton placeShip=new JButton("Place Ship");
 		
 		public shipPlacerWindow(int x,int y)
 		{
@@ -550,6 +550,87 @@ public class BattleShip extends JFrame
 					System.out.println("yooo");
 			        IsValid();
 			    }
+			});
+			
+			
+			//the listener for for the button that places the ships----------------------------------------
+			placeShip.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					int range=0;//this is the range of the ship selected
+					char shipCharacter='X';
+					
+					String ship=(String) shipList.getSelectedItem();//returns what kind of ship is selected in combobox
+					//setting the range based on what kind of ship selected
+					if(ship.equals("Aircraft Carrier"))
+					{
+						shipCharacter='A';
+						range=5;
+					}
+					else if(ship.equals("Battleship"))
+					{
+						shipCharacter='B';
+						range=4;
+					}
+					else if(ship.equals("Cruiser"))
+					{
+						shipCharacter='C';
+						range=3;
+					}
+					else if(ship.equals("Destroyer"))
+					{
+						if(destroyers==0)
+						{
+							shipCharacter='D';
+						}
+						else if(destroyers==1)
+						{
+							shipCharacter='E';//i make it 'E' to be able to distinguish between the two destroyer ships
+						}
+						range=2;
+					}
+					String shipString=Character.toString(shipCharacter);
+					//changing the texts in the grid and on the actual layout
+					if(North.isSelected())
+					{
+							int yTest=y;
+							for(int i=0;i<range;i++)
+							{
+								userGrid[x][yTest]=shipCharacter;
+								leftGrid[x+1][yTest].setText(shipString);
+								yTest--;	
+							}
+					}
+					else if(South.isSelected())
+					{
+							int yTest=y;
+							for(int i=0;i<range;i++)
+							{
+								if(userGrid[x][yTest]!='X')
+								yTest++;	
+							}
+					}
+					else if(East.isSelected())
+					{
+							int xTest=x;
+							for(int i=0;i<range;i++)
+							{
+								
+								
+								xTest++;	
+							}
+					}
+					else if(West.isSelected())
+					{
+							int xTest=x;
+							for(int i=0;i<range;i++)
+							{
+								xTest--;	
+							}
+					}					
+				}
 			});
 			
 			
