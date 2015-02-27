@@ -91,9 +91,6 @@ public class BattleShip extends JFrame
 		add(south,BorderLayout.SOUTH);
 		selectFileListener();
 
-
-
-		new shipPlacerWindow(7,7);
 		
 		
 		setVisible(true);
@@ -281,6 +278,7 @@ public class BattleShip extends JFrame
 						if(leftGrid[i1][j1].press)
 						{
 							System.out.println("The coordinates are"+ leftGrid[i1][j1].x+leftGrid[i1][j1].y);
+							new shipPlacerWindow(leftGrid[i1][j1].x,leftGrid[i1][j1].y);
 						}
 					}
 					public void mouseEntered(MouseEvent e){}
@@ -376,7 +374,7 @@ public class BattleShip extends JFrame
 			this.x=x-1;//making the coordinate into index value so u subtract by one
 			this.y=y-1;
 			
-			setTitle("Select ship at "+ getCharForNumber(x)+y);
+			setTitle("Select ship at "+ getCharForNumber(y)+x);
 			setSize(300,200);
 			setLocationRelativeTo(null);
 			setLayout(new BorderLayout());
@@ -484,7 +482,7 @@ public class BattleShip extends JFrame
 						for(int i=0;i<range;i++)
 						{
 							
-							if(userGrid[x][xTest]!='X')
+							if(userGrid[xTest][y]!='X')
 							{
 								System.out.println("nottt x east?");
 								throw new CantAddShipException();//throws an exception if there is a ship already in position
@@ -501,7 +499,10 @@ public class BattleShip extends JFrame
 						int xTest=x;
 						for(int i=0;i<range;i++)
 						{
-							if(userGrid[x][xTest]!='X')throw new CantAddShipException();//throws an exception if there is a ship already in position
+							if(userGrid[xTest][y]!='X')
+							{
+								throw new CantAddShipException();//throws an exception if there is a ship already in position
+							}
 							xTest--;	
 						}
 					}
@@ -568,16 +569,19 @@ public class BattleShip extends JFrame
 					{
 						shipCharacter='A';
 						range=5;
+						carriers++;
 					}
 					else if(ship.equals("Battleship"))
 					{
 						shipCharacter='B';
 						range=4;
+						battlships++;
 					}
 					else if(ship.equals("Cruiser"))
 					{
 						shipCharacter='C';
 						range=3;
+						cruisers++;
 					}
 					else if(ship.equals("Destroyer"))
 					{
@@ -590,6 +594,7 @@ public class BattleShip extends JFrame
 							shipCharacter='E';//i make it 'E' to be able to distinguish between the two destroyer ships
 						}
 						range=2;
+						destroyers++;
 					}
 					String shipString=Character.toString(shipCharacter);
 					//changing the texts in the grid and on the actual layout
@@ -608,7 +613,8 @@ public class BattleShip extends JFrame
 							int yTest=y;
 							for(int i=0;i<range;i++)
 							{
-								if(userGrid[x][yTest]!='X')
+								userGrid[x][yTest]=shipCharacter;
+								leftGrid[x+1][yTest].setText(shipString);
 								yTest++;	
 							}
 					}
@@ -617,8 +623,8 @@ public class BattleShip extends JFrame
 							int xTest=x;
 							for(int i=0;i<range;i++)
 							{
-								
-								
+								userGrid[xTest][y]=shipCharacter;
+								leftGrid[xTest+1][y].setText(shipString);
 								xTest++;	
 							}
 					}
@@ -627,13 +633,14 @@ public class BattleShip extends JFrame
 							int xTest=x;
 							for(int i=0;i<range;i++)
 							{
+								userGrid[xTest][y]=shipCharacter;
+								leftGrid[xTest+1][y].setText(shipString);
 								xTest--;	
 							}
 					}					
+				shipPlacerWindow.this.dispose();//closes shipplacer window after you you place a ship
 				}
 			});
-			
-			
 		}
 	}
 	
