@@ -241,7 +241,7 @@ public class BattleShip extends JFrame
 	//action listener for the gridlabels
 	private void gridLabelListener()
 	{
-
+		//listener for right grid 
 		for(int i=0;i<11;i++)
 		{
 			for (int j=0;j <11; j++)
@@ -265,6 +265,7 @@ public class BattleShip extends JFrame
 			}
 		}
 		
+		//listener for left grid
 		for(int i=0;i<11;i++)
 		{
 			for (int j=0;j <11; j++)
@@ -277,8 +278,17 @@ public class BattleShip extends JFrame
 					{
 						if(leftGrid[i1][j1].press)
 						{
-							System.out.println("The coordinates are"+ leftGrid[i1][j1].x+leftGrid[i1][j1].y);
-							new shipPlacerWindow(leftGrid[i1][j1].x,leftGrid[i1][j1].y);
+							if(userGrid[leftGrid[i1][j1].x-1][leftGrid[i1][j1].y-1]=='X')//if the coordinate has no ship placed
+							{
+								System.out.println("The coordinates are"+ leftGrid[i1][j1].x+leftGrid[i1][j1].y);
+								new shipPlacerWindow(leftGrid[i1][j1].x,leftGrid[i1][j1].y);
+							}
+							else
+							{
+								System.out.println("get's called?");
+								System.out.println("else" + (leftGrid[i1][j1].y-1));
+								shipDeleter(leftGrid[i1][j1].x-1, leftGrid[i1][j1].y-1);;
+							}
 						}
 					}
 					public void mouseEntered(MouseEvent e){}
@@ -289,6 +299,97 @@ public class BattleShip extends JFrame
 			}
 		}
 	}
+	
+	//ship deleter
+	private void shipDeleter(int x, int y)
+	{
+		int range=0;
+		char shipWeWant='X';
+
+		if(userGrid[x][y]=='A')
+		{
+			System.out.println("getting called or no A");
+			range=5;
+			shipWeWant='A';
+		}
+		else if(userGrid[x][y]=='B')
+		{
+			range=4;
+			shipWeWant='B';
+		}
+		else if(userGrid[x][y]=='C')
+		{
+			range=3;
+			shipWeWant='C';
+		}
+		else if(userGrid[x][y]=='D')
+		{
+			range=2;
+			shipWeWant='D';
+		}
+		else if(userGrid[x][y]=='E')
+		{
+			range=2;
+			shipWeWant='E';
+		}
+		
+		System.out.println("range is:"+range);
+		System.out.println(y+1);
+		//checking north
+		if(range<=y+1)//if there is room in the north for the full ship check for it
+		{
+			for(int i=0;i<range;i++)
+			{
+				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
+				{
+					userGrid[x][y-i]='X';
+					leftGrid[x+1][y-i].setText("X");
+				}
+				else break;//if it's not stop searching the north
+			}
+		}
+		else //if there isn't room we still want to check incase we pressed the middle of a ship but don't want to go out of bound
+		{
+			for(int i=0;i<y+1;i++)
+			{
+				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
+				{
+					userGrid[x][y-i]='X';
+					leftGrid[x+1][y-i].setText("X");
+				}
+				else break;
+			}
+		}
+		//checking south
+		if(range+(y+1)<11)
+		{
+			for(int i=0;i<range;i++)
+			{
+				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
+				{
+					userGrid[x][y+i]='X';
+					leftGrid[x+1][y+i].setText("X");
+				}
+			}
+		}
+		else //if there isn't room we still want to check incase we pressed the middle of a ship but don't want to go out of bound
+		{
+			System.out.println("dgs"+y);
+			for(int i=0;i<10-y;i++)
+			{
+				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
+				{
+					userGrid[x][y+i]='X';
+					leftGrid[x+1][y+i].setText("X");
+				}
+			}
+		}
+		//checking west
+		
+		//checking eat
+	}
+	
+	
 	//action listener for select file
 	private void selectFileListener()
 	{
@@ -436,7 +537,7 @@ public class BattleShip extends JFrame
 				
 				if(North.isSelected())
 				{
-					if(range>y) throw new CantAddShipException();//checking to make sure we're not out of range
+					if(range>y+1) throw new CantAddShipException();//checking to make sure we're not out of range
 					else
 					{
 						int yTest=y;
