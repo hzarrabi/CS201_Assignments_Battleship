@@ -57,6 +57,10 @@ public class BattleShip extends JFrame
 	boolean selectedFile=false;
 	boolean editMode=true;
 	
+	//int for how many hit each side had taken
+	int compHits=0;//so if this equals 16 that means that the USER won
+	int userHits=0;
+	
 	public BattleShip()
 	{
 		fillUserGrid();//this will instantiate userArray with X's
@@ -100,7 +104,7 @@ public class BattleShip extends JFrame
 		startButtonListener();
 
 		
-		
+		setResizable(false);
 		setVisible(true);
 	}
 	
@@ -271,7 +275,9 @@ public class BattleShip extends JFrame
 								System.out.println("The coordinates are"+ rightGrid[i1][j1].x+rightGrid[i1][j1].y);
 								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X')
 								{
-									System.out.println(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]);
+									String label=Character.toString(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]);
+									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setText(label);
+									compHits++;
 								}
 							}
 						}
