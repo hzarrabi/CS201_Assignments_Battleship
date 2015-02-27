@@ -311,26 +311,31 @@ public class BattleShip extends JFrame
 			System.out.println("getting called or no A");
 			range=5;
 			shipWeWant='A';
+			carriers--;
 		}
 		else if(userGrid[x][y]=='B')
 		{
 			range=4;
 			shipWeWant='B';
+			battlships--;
 		}
 		else if(userGrid[x][y]=='C')
 		{
 			range=3;
 			shipWeWant='C';
+			cruisers--;
 		}
 		else if(userGrid[x][y]=='D')
 		{
 			range=2;
 			shipWeWant='D';
+			destroyers--;
 		}
 		else if(userGrid[x][y]=='E')
 		{
 			range=2;
 			shipWeWant='E';
+			destroyers--;
 		}
 		
 		System.out.println("range is:"+range);
@@ -343,7 +348,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y-i]='X';
-					leftGrid[x+1][y-i].setText("X");
+					leftGrid[x+1][y-i].setText("?");
 				}
 				else break;//if it's not stop searching the north
 			}
@@ -355,7 +360,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y-i]='X';
-					leftGrid[x+1][y-i].setText("X");
+					leftGrid[x+1][y-i].setText("?");
 				}
 				else break;
 			}
@@ -368,7 +373,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y+i]='X';
-					leftGrid[x+1][y+i].setText("X");
+					leftGrid[x+1][y+i].setText("?");
 				}
 			}
 		}
@@ -380,13 +385,59 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y+i]='X';
-					leftGrid[x+1][y+i].setText("X");
+					leftGrid[x+1][y+i].setText("?");
 				}
 			}
 		}
 		//checking west
+		if(range<=x+1)
+		{
+			for(int i=0;i<range;i++)
+			{
+				if(userGrid[x-i][y]==shipWeWant)//if it is the ship we want
+				{
+					userGrid[x-i][y]='X';
+					leftGrid[x-i+1][y].setText("?");
+				}
+				
+			}
+		}
+		else //if there isn't room we still want to check incase we pressed the middle of a ship but don't want to go out of bound
+		{
+			for(int i=0;i<x+1;i++)
+			{
+				if(userGrid[x-i][y]==shipWeWant)//if it is the ship we want
+				{
+					userGrid[x-i][y]='X';
+					leftGrid[x-i+1][y].setText("?");
+				}
+			}
+		}
+		//checking east
+		if(range+x<11)
+		{
+			for(int i=0;i<range;i++)
+			{
+				System.out.println("index: "+(i+x));
+				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
+				{
+					userGrid[x+i][y]='X';
+					leftGrid[x+i+1][y].setText("?");
+				}
+			}
+		}
+		else //if there isn't room we still want to check incase we pressed the middle of a ship but don't want to go out of bound
+		{
+			for(int i=0;i<10-x;i++)
+			{
+				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
+				{
+					userGrid[x+i][y]='X';
+					leftGrid[x+i+1][y].setText("?");
+				}
+			}
+		}
 		
-		//checking eat
 	}
 	
 	
@@ -484,10 +535,10 @@ public class BattleShip extends JFrame
 			//making the panel with the combo box
 			JPanel top = new JPanel();
 			top.add(new JLabel("Select Ship:"));
-			shipList.addItem("Aircraft Carrier");
-			shipList.addItem("Battleship");
-			shipList.addItem("Cruiser");
-			shipList.addItem("Destroyer");
+			if(carriers==0)shipList.addItem("Aircraft Carrier");//if we haven't placed a carrier
+			if(battlships==0)shipList.addItem("Battleship");
+			if(cruisers==0)shipList.addItem("Cruiser");
+			if(destroyers<2)shipList.addItem("Destroyer");
 			top.add(shipList);
 			
 			JPanel middle = new JPanel();
