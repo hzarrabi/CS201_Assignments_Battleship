@@ -40,6 +40,8 @@ public class BattleShip extends JFrame
 	JPanel right;
 
 	JLabel log=new JLabel("Log:");
+	String playersAim="N/A";
+	String computersAim="N/A";
 	JButton selectFileButton=new JButton("Select File...");
 	JLabel fileName=new JLabel("File:");
 	JButton startButton = new JButton("START");
@@ -49,6 +51,10 @@ public class BattleShip extends JFrame
 	int battlships=0;
 	int cruisers=0;
 	int destroyers=0;
+	
+	//bools for different modes of game
+	boolean selectedFile=false;
+	boolean editMode=true;
 	
 	public BattleShip()
 	{
@@ -76,7 +82,7 @@ public class BattleShip extends JFrame
 		center.add(right);
 		add(center,BorderLayout.CENTER);
 		
-		JPanel south=new JPanel(new BorderLayout());//holds buttons to select file and start
+		JPanel south=new JPanel(new BorderLayout());//holds buttons to  file and start
 		JPanel southLeft=new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel southRight=new JPanel(new FlowLayout(FlowLayout.LEFT));
 		
@@ -90,6 +96,7 @@ public class BattleShip extends JFrame
 		south.add(southRight,BorderLayout.EAST);
 		add(south,BorderLayout.SOUTH);
 		selectFileListener();
+		startButtonListener();
 
 		
 		
@@ -436,8 +443,25 @@ public class BattleShip extends JFrame
 			}
 		}
 		
+		startButton.setEnabled(false);//if you delete a ship you can't start so disabling the button
 	}
 	
+	private void startButtonListener()
+	{
+		startButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
+				selectFileButton.setVisible(false);
+				startButton.setVisible(false);
+				fileName.setText("");//delete the text instead of setting invisible because then i only have to reset in new game
+				editMode=false;
+			}
+		});
+	}
 	
 	//action listener for select file
 	private void selectFileListener()
@@ -494,8 +518,9 @@ public class BattleShip extends JFrame
 						} 
 						catch (IOException ioe) 
 						{}
-				        System.out.println("done");
-						
+				        System.out.println("selected file");
+				        
+				        selectedFile=true;
 					}
 				}
 				
@@ -787,7 +812,12 @@ public class BattleShip extends JFrame
 								leftGrid[xTest+1][y].setText(shipString);
 								xTest--;	
 							}
-					}					
+					}		
+				if(carriers+battlships+cruisers+destroyers==5)//if they chose all ships
+				{ 
+					startButton.setEnabled(true);
+				}
+				
 				shipPlacerWindow.this.dispose();//closes shipplacer window after you you place a ship
 				}
 			});
