@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -20,6 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -58,6 +60,12 @@ public class BattleShip extends JFrame
 	boolean selectedFile=false;
 	boolean editMode=true;
 	
+	//images
+	private ImageIcon wave=new ImageIcon("wave.jpg"); 
+	private ImageIcon miss=new ImageIcon("x.jpg");
+	private ImageIcon hit=new ImageIcon("hit.jpg");
+	private ImageIcon aship=new ImageIcon("AShip.jpg");
+	
 	//int for how many hit each side had taken
 	int compHits=0;//so if this equals 16 that means that the USER won
 	int userHits=0;
@@ -77,10 +85,10 @@ public class BattleShip extends JFrame
 		add(north,BorderLayout.NORTH);
 		
 		JPanel center=new JPanel(new FlowLayout());//center holds the left and right grids
-		left=new JPanel(new GridLayout(11, 11, 15, 20));
+		left=new JPanel(new GridLayout(11, 11));
 		left.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		setLeftGrid();
-		right=new JPanel(new GridLayout(11, 11, 15, 20));
+		right=new JPanel(new GridLayout(11, 11));
 		right.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		setRightGrid();
 		gridLabelListener();
@@ -128,7 +136,10 @@ public class BattleShip extends JFrame
 			for(int i=0;i<11;i++)
 			{
 				leftGrid[i][j]=new GridLabel(i,j+1);
-				leftGrid[i][j].setText("?");//initialize all question marks initially
+				if(i>0 && j<10)
+				{
+					leftGrid[i][j].setIcon(wave);//initialize all question marks initially
+				}
 			}
 		}
 		leftGrid[0][0].setText("A");
@@ -193,7 +204,10 @@ public class BattleShip extends JFrame
 			for(int i=0;i<11;i++)
 			{
 				rightGrid[i][j]=new GridLabel(i,j+1);
-				rightGrid[i][j].setText("?");//initialize all question marks initially
+				if(i>0 && j<10)
+				{
+					rightGrid[i][j].setIcon(wave);//initialize all question marks initially
+				}
 			}
 		}
 		rightGrid[0][0].setText("A");
@@ -276,7 +290,7 @@ public class BattleShip extends JFrame
 								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X' && compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='O')//it's not a ship nore have we aims for it before
 								{
 									String label=Character.toString(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]);
-									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setText(label);
+									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(hit);
 									compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
 									compHits++;
 									if(compHits==16)
@@ -287,7 +301,7 @@ public class BattleShip extends JFrame
 								}
 								else if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]=='X')//you did miss
 								{
-									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setText("MISS");
+									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(miss);
 										compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
 										compShooter();
 								}
@@ -352,7 +366,7 @@ public class BattleShip extends JFrame
 		
 		if(userGrid[x][y]!='X' && userGrid[x][y]!='O')//if comp hits a target
 		{
-			leftGrid[x+1][y].setText("HIT!");
+			leftGrid[x+1][y].setIcon(hit);
 			userGrid[x][y]='O';//marking that computer missed
 			userHits++;
 			if(userHits==16)//if the computer has hit all ships
@@ -363,7 +377,7 @@ public class BattleShip extends JFrame
 		}
 		else if(userGrid[x][y]=='X')//if the computer has aimed at that before it aims again
 		{
-			leftGrid[x+1][y].setText("MISS!");
+			leftGrid[x+1][y].setIcon(miss);
 		}
 		else//computer hit's something already hit
 		{
@@ -810,6 +824,7 @@ public class BattleShip extends JFrame
 					
 					String ship=(String) shipList.getSelectedItem();//returns what kind of ship is selected in combobox
 					//setting the range based on what kind of ship selected
+					ImageIcon theShip = new ImageIcon();
 					if(ship.equals("Aircraft Carrier"))
 					{
 						shipCharacter='A';
