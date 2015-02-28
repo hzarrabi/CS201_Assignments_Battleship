@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -104,7 +105,6 @@ public class BattleShip extends JFrame
 		startButtonListener();
 
 		
-		setResizable(false);
 		setVisible(true);
 	}
 	
@@ -273,11 +273,23 @@ public class BattleShip extends JFrame
 							else//when we're in playing mode then we want to play!!!!
 							{
 								System.out.println("The coordinates are"+ rightGrid[i1][j1].x+rightGrid[i1][j1].y);
-								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X')
+								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X' && compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='O')//it's not a ship nore have we aims for it before
 								{
 									String label=Character.toString(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]);
 									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setText(label);
+									compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
 									compHits++;
+									if(compHits==16)
+									{
+										//TODO here i'll open the new window that says the games over and the user won
+										System.out.println("Player wins");
+									}
+								}
+								else if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]=='X')//you did miss
+								{
+									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setText("MISS");
+										compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
+										compShooter();
 								}
 							}
 						}
@@ -330,6 +342,34 @@ public class BattleShip extends JFrame
 		}
 	}
 	
+	
+	//this is the function for the computer guessing coordinates
+	private void compShooter()
+	{
+		Random rand=new Random();
+		int x=rand.nextInt(9 - 0 + 1) + 0;
+		int y=rand.nextInt(9 - 0 + 1) + 0;
+		
+		if(userGrid[x][y]!='X' && userGrid[x][y]!='O')//if comp hits a target
+		{
+			leftGrid[x+1][y].setText("HIT!");
+			userGrid[x][y]='O';//marking that computer missed
+			userHits++;
+			if(userHits==16)//if the computer has hit all ships
+			{
+				//TODO open window up that says the computer won
+				System.out.println("The computer won!!!");
+			}
+		}
+		else if(userGrid[x][y]=='X')//if the computer has aimed at that before it aims again
+		{
+			leftGrid[x+1][y].setText("MISS!");
+		}
+		else//computer missed
+		{
+			
+		}
+	}
 	//ship deleter
 	private void shipDeleter(int x, int y)
 	{
