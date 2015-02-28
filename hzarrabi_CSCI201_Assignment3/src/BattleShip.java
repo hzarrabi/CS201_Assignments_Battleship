@@ -365,9 +365,9 @@ public class BattleShip extends JFrame
 		{
 			leftGrid[x+1][y].setText("MISS!");
 		}
-		else//computer missed
+		else//computer hit's something already hit
 		{
-			
+			compShooter();
 		}
 	}
 	//ship deleter
