@@ -65,6 +65,10 @@ public class BattleShip extends JFrame
 	private ImageIcon miss=new ImageIcon("x.jpg");
 	private ImageIcon hit=new ImageIcon("hit.jpg");
 	private ImageIcon aship=new ImageIcon("AShip.jpg");
+	private ImageIcon bship=new ImageIcon("BShip.jpg");
+	private ImageIcon cship=new ImageIcon("CShip.jpg");
+	private ImageIcon dship=new ImageIcon("DShip.jpg");
+	
 	
 	//int for how many hit each side had taken
 	int compHits=0;//so if this equals 16 that means that the USER won
@@ -293,11 +297,12 @@ public class BattleShip extends JFrame
 									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(hit);
 									compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
 									compHits++;
-									if(compHits==16)
+									if(compHits>=16)
 									{
 										//TODO here i'll open the new window that says the games over and the user won
 										System.out.println("Player wins");
 									}
+									else compShooter();//if we haven't won then the computer shoots
 								}
 								else if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]=='X')//you did miss
 								{
@@ -432,7 +437,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y-i]='X';
-					leftGrid[x+1][y-i].setText("?");
+					leftGrid[x+1][y-i].setIcon(wave);
 				}
 				else break;//if it's not stop searching the north
 			}
@@ -444,7 +449,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y-i]='X';
-					leftGrid[x+1][y-i].setText("?");
+					leftGrid[x+1][y-i].setIcon(wave);
 				}
 				else break;
 			}
@@ -457,7 +462,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y+i]='X';
-					leftGrid[x+1][y+i].setText("?");
+					leftGrid[x+1][y+i].setIcon(wave);
 				}
 			}
 		}
@@ -469,7 +474,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y+i]='X';
-					leftGrid[x+1][y+i].setText("?");
+					leftGrid[x+1][y+i].setIcon(wave);
 				}
 			}
 		}
@@ -481,7 +486,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x-i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x-i][y]='X';
-					leftGrid[x-i+1][y].setText("?");
+					leftGrid[x-i+1][y].setIcon(wave);
 				}
 				
 			}
@@ -493,7 +498,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x-i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x-i][y]='X';
-					leftGrid[x-i+1][y].setText("?");
+					leftGrid[x-i+1][y].setIcon(wave);
 				}
 			}
 		}
@@ -506,7 +511,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x+i][y]='X';
-					leftGrid[x+i+1][y].setText("?");
+					leftGrid[x+i+1][y].setIcon(wave);
 				}
 			}
 		}
@@ -517,7 +522,7 @@ public class BattleShip extends JFrame
 				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x+i][y]='X';
-					leftGrid[x+i+1][y].setText("?");
+					leftGrid[x+i+1][y].setIcon(wave);
 				}
 			}
 		}
@@ -824,22 +829,25 @@ public class BattleShip extends JFrame
 					
 					String ship=(String) shipList.getSelectedItem();//returns what kind of ship is selected in combobox
 					//setting the range based on what kind of ship selected
-					ImageIcon theShip = new ImageIcon();
+					ImageIcon theShip=wave;//image icon that will either be a b c or d
 					if(ship.equals("Aircraft Carrier"))
 					{
 						shipCharacter='A';
+						theShip=aship;
 						range=5;
 						carriers++;
 					}
 					else if(ship.equals("Battleship"))
 					{
 						shipCharacter='B';
+						theShip=bship;
 						range=4;
 						battlships++;
 					}
 					else if(ship.equals("Cruiser"))
 					{
 						shipCharacter='C';
+						theShip=cship;
 						range=3;
 						cruisers++;
 					}
@@ -853,6 +861,7 @@ public class BattleShip extends JFrame
 						{
 							shipCharacter='E';//i make it 'E' to be able to distinguish between the two destroyer ships
 						}
+						theShip=dship;
 						range=2;
 						destroyers++;
 					}
@@ -864,7 +873,8 @@ public class BattleShip extends JFrame
 							for(int i=0;i<range;i++)
 							{
 								userGrid[x][yTest]=shipCharacter;
-								leftGrid[x+1][yTest].setText(shipString);
+								//leftGrid[x+1][yTest].setText(shipString);
+								leftGrid[x+1][yTest].setIcon(theShip);
 								yTest--;	
 							}
 					}
@@ -874,7 +884,8 @@ public class BattleShip extends JFrame
 							for(int i=0;i<range;i++)
 							{
 								userGrid[x][yTest]=shipCharacter;
-								leftGrid[x+1][yTest].setText(shipString);
+								//leftGrid[x+1][yTest].setText(shipString);
+								leftGrid[x+1][yTest].setIcon(theShip);
 								yTest++;	
 							}
 					}
@@ -884,7 +895,8 @@ public class BattleShip extends JFrame
 							for(int i=0;i<range;i++)
 							{
 								userGrid[xTest][y]=shipCharacter;
-								leftGrid[xTest+1][y].setText(shipString);
+								//leftGrid[xTest+1][y].setText(shipString);
+								leftGrid[xTest+1][y].setIcon(theShip);
 								xTest++;	
 							}
 					}
@@ -894,7 +906,8 @@ public class BattleShip extends JFrame
 							for(int i=0;i<range;i++)
 							{
 								userGrid[xTest][y]=shipCharacter;
-								leftGrid[xTest+1][y].setText(shipString);
+								//leftGrid[xTest+1][y].setText(shipString);
+								leftGrid[xTest+1][y].setIcon(theShip);
 								xTest--;	
 							}
 					}		
