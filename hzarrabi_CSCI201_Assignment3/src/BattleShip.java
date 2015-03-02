@@ -43,11 +43,11 @@ public class BattleShip extends JFrame
 	JPanel left;
 	JPanel right;
 
-	JLabel log=new JLabel("Log:");
+	JLabel log=new JLabel("Log: You are in edit mode, click to place your ships.");
 	String playersAim="N/A";
 	String computersAim="N/A";
 	JButton selectFileButton=new JButton("Select File...");
-	JLabel fileName=new JLabel("File:");
+	JLabel fileName=new JLabel("File:                                     ");
 	JButton startButton = new JButton("START");
 	
 	//for the ship placement
@@ -80,7 +80,7 @@ public class BattleShip extends JFrame
 		
 		setTitle("BattleShip");
 		setLayout(new BorderLayout());
-		setSize(640,490);
+		setSize(690,440);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -301,6 +301,7 @@ public class BattleShip extends JFrame
 									{
 										//TODO here i'll open the new window that says the games over and the user won
 										System.out.println("Player wins");
+										new winnerWindow("You");
 									}
 									else compShooter();//if we haven't won then the computer shoots
 								}
@@ -577,7 +578,7 @@ public class BattleShip extends JFrame
 						if (pos > 0) {
 						    fileName = fileName.substring(0, pos);
 						}
-						BattleShip.this.fileName.setText("File:" + fileName);
+						BattleShip.this.fileName.setText("File:" + fileName+ "                                     ");
 						
 						//reading the file
 						try
@@ -782,6 +783,8 @@ public class BattleShip extends JFrame
 			}
 		}
 	
+
+					
 		//this function adds all the listeners for to see if selection is valid and for button adding ship
 		private void everyThingListener()
 		{
@@ -922,6 +925,108 @@ public class BattleShip extends JFrame
 		}
 	}
 
+	public class winnerWindow extends JDialog
+	{
+		private JButton okButton =new JButton("OK");
+		
+		private ImageIcon wave1=new ImageIcon("wave.jpg"); 
+		
+		public winnerWindow(String winner)
+		{
+			setTitle("Game Over");
+			setSize(300,150);
+			setLocationRelativeTo(null);
+			setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			
+			JLabel winner1=new JLabel(winner+ " won!");
+			winner1.setAlignmentX( Component.LEFT_ALIGNMENT);
+			add(winner1);
+			add(okButton);
+			okListener();
+			
+			setModal(true);
+			setVisible(true);
+		}
+		
+		public void okListener()
+		{
+			okButton.addActionListener(new ActionListener()
+			{
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					reset();
+				}
+			});
+		}
+		
+		//resets the game
+		private void reset()
+		{
+			System.out.println("reset getting called");
+			//reset right grid
+			for (int j=0;j<11;j++)
+			{
+				for(int i=0;i<11;i++)
+				{
+					if(i>0 && j<10)
+					{
+						System.out.println("trying to reset icon?");
+						rightGrid[i][j].setIcon(wave1);//initialize all question marks initially
+
+					}
+				}
+			}
+			
+			//reset left grid 
+			for (int j=0;j<11;j++)
+			{
+				for(int i=0;i<11;i++)
+				{
+					if(i>0 && j<10)
+					{
+						leftGrid[i][j].setIcon(wave1);//initialize all question marks initially
+					}
+				}
+			}
+			
+			//reseting user and computer grid
+			for (int j=0;j<10;j++)
+			{
+				for(int i=0;i<10;i++)
+				{
+					userGrid[i][j]='X';
+					compGrid[i][j]='X';
+				}
+			}
+			
+			log.setText("Log: You are in edit mode, click to place your ships.");
+			playersAim="N/A";
+			computersAim="N/A";
+			selectFileButton.setVisible(true);;
+			fileName.setText("File:                                     ");
+			startButton.setEnabled(false);
+			startButton.setVisible(true);
+			
+			//for the ship placement
+			carriers=0;
+			battlships=0;
+			cruisers=0;
+			destroyers=0;
+			
+			//bools for different modes of game
+			selectedFile=false;
+			editMode=true;
+			
+			int compHits=0;//so if this equals 16 that means that the USER won
+			int userHits=0;
+			
+			
+			winnerWindow.this.dispose();
+		}
+	}
 	
 		
 	
