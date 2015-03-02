@@ -325,6 +325,11 @@ public class BattleShip extends JFrame
 			}
 		}
 	}
+	
+	private String getCharForNumber2(int i) {
+	    return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
+	}
+	
 	//action listener for the gridlabels
 	private void gridLabelListener()
 	{
@@ -353,6 +358,9 @@ public class BattleShip extends JFrame
 									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(hit);
 									compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
 									compHits++;
+									
+									playersAim= getCharForNumber2(rightGrid[i1][j1].y)+rightGrid[i1][j1].x;
+									log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
 									if(compHits>=16)
 									{
 										new winnerWindow("You");
@@ -363,6 +371,8 @@ public class BattleShip extends JFrame
 								{
 									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(miss);
 										compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
+										playersAim= getCharForNumber2(rightGrid[i1][j1].y)+rightGrid[i1][j1].x;
+										log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
 										compShooter();
 								}
 							}
@@ -429,6 +439,8 @@ public class BattleShip extends JFrame
 			leftGrid[x+1][y].setIcon(hit);
 			userGrid[x][y]='O';//marking that computer missed
 			userHits++;
+			computersAim= getCharForNumber2(y+1)+(x+1);
+			log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
 			if(userHits==16)//if the computer has hit all ships
 			{
 				new winnerWindow("Computer");
@@ -438,6 +450,8 @@ public class BattleShip extends JFrame
 		{
 			userGrid[x][y]='O';
 			leftGrid[x+1][y].setIcon(miss);
+			computersAim= getCharForNumber2(y+1)+(x+1);
+			log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
 		}
 		else//computer hit's something already hit
 		{
