@@ -347,7 +347,6 @@ public class BattleShip extends JFrame
 							}
 							else//when we're in playing mode then we want to play!!!!
 							{
-								System.out.println("The coordinates are"+ rightGrid[i1][j1].x+rightGrid[i1][j1].y);
 								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X' && compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='O')//it's not a ship nore have we aims for it before
 								{
 									String label=Character.toString(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]);
@@ -356,8 +355,6 @@ public class BattleShip extends JFrame
 									compHits++;
 									if(compHits>=16)
 									{
-										//TODO here i'll open the new window that says the games over and the user won
-										System.out.println("Player wins");
 										new winnerWindow("You");
 									}
 									else compShooter();//if we haven't won then the computer shoots
@@ -435,7 +432,6 @@ public class BattleShip extends JFrame
 			if(userHits==16)//if the computer has hit all ships
 			{
 				new winnerWindow("Computer");
-				System.out.println("The computer won!!!");
 			}
 		}
 		else if(userGrid[x][y]=='X')//if the computer has aimed at that before it aims again
@@ -456,7 +452,6 @@ public class BattleShip extends JFrame
 
 		if(userGrid[x][y]=='A')
 		{
-			System.out.println("getting called or no A");
 			range=5;
 			shipWeWant='A';
 			carriers--;
@@ -486,8 +481,7 @@ public class BattleShip extends JFrame
 			destroyers--;
 		}
 		
-		System.out.println("range is:"+range);
-		System.out.println(y+1);
+
 		//checking north
 		if(range<=y+1)//if there is room in the north for the full ship check for it
 		{
@@ -527,7 +521,6 @@ public class BattleShip extends JFrame
 		}
 		else //if there isn't room we still want to check incase we pressed the middle of a ship but don't want to go out of bound
 		{
-			System.out.println("dgs"+y);
 			for(int i=0;i<10-y;i++)
 			{
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
@@ -566,7 +559,6 @@ public class BattleShip extends JFrame
 		{
 			for(int i=0;i<range;i++)
 			{
-				System.out.println("index: "+(i+x));
 				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x+i][y]='X';
@@ -628,7 +620,6 @@ public class BattleShip extends JFrame
 					if(returnVal==fc.APPROVE_OPTION)//if we selected a file
 					{
 						selectFileButton.setVisible(false);//removing the select file button
-						System.out.println("i did one thing lol");
 						
 						//getting the fileName without extenstion to change JLabel
 						String fileName=fc.getSelectedFile().getName();
@@ -661,7 +652,6 @@ public class BattleShip extends JFrame
 						} 
 						catch (IOException ioe) 
 						{}
-				        System.out.println("selected file");
 				        
 				        selectedFile=true;
 				        if(carriers+battlships+cruisers+destroyers==5 && selectedFile)//if all ships places and file selected 
@@ -777,9 +767,6 @@ public class BattleShip extends JFrame
 				{
 					if(range+y>10)
 					{
-						System.out.println(range+"range");
-						System.out.println(y+"y");
-						System.out.println("fadsfadsfasfasf");
 						throw new CantAddShipException();
 					}
 					else
@@ -796,7 +783,6 @@ public class BattleShip extends JFrame
 				{
 					if(range+x>10)
 					{
-						System.out.println("out of range east");
 						throw new CantAddShipException();
 					}
 					else
@@ -807,7 +793,6 @@ public class BattleShip extends JFrame
 							
 							if(userGrid[xTest][y]!='X')
 							{
-								System.out.println("nottt x east?");
 								throw new CantAddShipException();//throws an exception if there is a ship already in position
 							}
 							xTest++;	
@@ -849,31 +834,26 @@ public class BattleShip extends JFrame
 			//the listener for the JComboBox
 			shipList.addActionListener (new ActionListener () {
 			    public void actionPerformed(ActionEvent e) {
-					System.out.println("yooo");
 			        IsValid();
 			    }
 			});
 			North.addActionListener (new ActionListener () {
 			    public void actionPerformed(ActionEvent e) {
-					System.out.println("yooo");
 			        IsValid();
 			    }
 			});
 			South.addActionListener (new ActionListener () {
 			    public void actionPerformed(ActionEvent e) {
-					System.out.println("yooo");
 			        IsValid();
 			    }
 			});
 			West.addActionListener (new ActionListener () {
 			    public void actionPerformed(ActionEvent e) {
-					System.out.println("yooo");
 			        IsValid();
 			    }
 			});
 			East.addActionListener (new ActionListener () {
 			    public void actionPerformed(ActionEvent e) {
-					System.out.println("yooo");
 			        IsValid();
 			    }
 			});
@@ -1030,7 +1010,6 @@ public class BattleShip extends JFrame
 		//resets the game
 		private void reset()
 		{
-			System.out.println("reset getting called");
 			//reset right grid
 			for (int j=0;j<11;j++)
 			{
@@ -1038,7 +1017,6 @@ public class BattleShip extends JFrame
 				{
 					if(i>0 && j<10)
 					{
-						System.out.println("trying to reset icon?");
 						rightGrid[i][j].setIcon(wave1);//initialize all question marks initially
 
 					}
@@ -1120,7 +1098,6 @@ public class BattleShip extends JFrame
 			} 
 			catch (FileNotFoundException e)
 			{
-				System.out.println("didn't fine");
 			} catch (IOException e)
 			{
 				// TODO Auto-generated catch block
@@ -1164,7 +1141,6 @@ public class BattleShip extends JFrame
 	//==============================================================
 	public static void main(String[] args)
 	{
-		System.out.println("hello");
 		new BattleShip();
 	}
 }
