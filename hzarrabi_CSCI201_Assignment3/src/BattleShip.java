@@ -3,11 +3,14 @@ import hzarrabi_CSCI201_Assignment3.CantAddShipException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Event;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
@@ -28,8 +31,14 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 
@@ -74,13 +83,19 @@ public class BattleShip extends JFrame
 	int compHits=0;//so if this equals 16 that means that the USER won
 	int userHits=0;
 	
+	//menus
+	JMenuBar menuBar = new JMenuBar();
+	JMenu fileMenu=new JMenu("Info");
+	JMenuItem howToMenu = new JMenuItem("How To");
+	JMenuItem aboutMenu=new JMenuItem("About");
+	
 	public BattleShip()
 	{
 		fillUserGrid();//this will instantiate userArray with X's
 		
 		setTitle("BattleShip");
 		setLayout(new BorderLayout());
-		setSize(690,440);
+		setSize(690,460);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -115,10 +130,52 @@ public class BattleShip extends JFrame
 		add(south,BorderLayout.SOUTH);
 		selectFileListener();
 		startButtonListener();
-
 		
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		menuBar.add(fileMenu);
+		fileMenu.setMnemonic('I');
+		fileMenu.add(howToMenu);
+		howToMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, Event.CTRL_MASK));
+		howToMenu.setMnemonic('h');
+		fileMenu.add(aboutMenu);
+		aboutMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK));
+		aboutMenu.setMnemonic('a');
+		menuListeners();
+		
+		
+		left.setBackground(Color.cyan);
+		right.setBackground(Color.cyan);
+		setResizable(false);
 		setVisible(true);
 	}
+	
+	private void menuListeners()
+	{
+		howToMenu.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new aboutWindow();
+				
+			}
+		});
+		
+		aboutMenu.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new aboutWindow2();
+				
+			}
+		});
+	}
+	
 	
 	//fills the userGrid array with x's
 	private void fillUserGrid()
@@ -377,12 +434,13 @@ public class BattleShip extends JFrame
 			userHits++;
 			if(userHits==16)//if the computer has hit all ships
 			{
-				//TODO open window up that says the computer won
+				new winnerWindow("Computer");
 				System.out.println("The computer won!!!");
 			}
 		}
 		else if(userGrid[x][y]=='X')//if the computer has aimed at that before it aims again
 		{
+			userGrid[x][y]='O';
 			leftGrid[x+1][y].setIcon(miss);
 		}
 		else//computer hit's something already hit
@@ -945,6 +1003,13 @@ public class BattleShip extends JFrame
 			add(okButton);
 			okListener();
 			
+			addWindowListener(new java.awt.event.WindowAdapter() {
+			    @Override
+			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+			        reset();
+			    }
+			});
+			
 			setModal(true);
 			setVisible(true);
 		}
@@ -1028,7 +1093,72 @@ public class BattleShip extends JFrame
 		}
 	}
 	
+	private class aboutWindow extends JDialog
+	{
+		JTextArea infoText=new JTextArea();
 		
+		public aboutWindow()
+		{
+			setTitle("Battleship Instructions");
+			setSize(300,200);
+			setLocationRelativeTo(null);
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			
+			
+			JScrollPane sp = new JScrollPane(infoText); 
+			add(sp);
+			
+			
+			try
+			{
+				BufferedReader in = new BufferedReader(new FileReader(new File("howTo.txt")));
+				String line = in.readLine();
+				while(line != null){
+				  infoText.append(line + "\n");
+				  line = in.readLine();
+				}
+			} 
+			catch (FileNotFoundException e)
+			{
+				System.out.println("didn't fine");
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			infoText.setEditable(false);
+			setModal(true);
+			setVisible(true);
+		}
+		
+	}
+	
+	
+	private class aboutWindow2 extends JDialog
+	{
+		
+		public aboutWindow2()
+		{
+			setTitle("About");
+			setSize(300,200);
+			setLocationRelativeTo(null);
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			
+			
+			add(new JLabel("Made by Hooman Zarrabi - 3/01/15"),BorderLayout.NORTH);
+			add(new JLabel(new ImageIcon("hooman.png")),BorderLayout.CENTER);
+			add(new JLabel("CSCI201USC: Assignment 3"),BorderLayout.SOUTH);
+			
+			
+			
+			
+			
+			setModal(true);
+			setVisible(true);
+		}
+		
+	}
 	
 	
 	//==============================================================
