@@ -724,7 +724,7 @@ public class BattleShip extends JFrame
 				setSize(690,600);//changing the size of the frame for the log
 				log.setLineWrap(true);
 			    log.setWrapStyleWord(true);
-			    log.setPreferredSize(new Dimension(690, 150));
+			    scroll.setPreferredSize(new Dimension(690, 150));
 			    south.setBorder(BorderFactory.createTitledBorder("Game Log"));
 				south.add(scroll);
 				
