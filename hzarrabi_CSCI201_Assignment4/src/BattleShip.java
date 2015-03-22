@@ -3,6 +3,7 @@ import hzarrabi_CSCI201_Assignment3.CantAddShipException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -40,6 +41,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.Timer;
+
 
 
 public class BattleShip extends JFrame
@@ -52,7 +55,6 @@ public class BattleShip extends JFrame
 	JPanel left;
 	JPanel right;
 
-	JLabel log=new JLabel("Log: You are in edit mode, click to place your ships.");
 	String playersAim="N/A";
 	String computersAim="N/A";
 	JButton selectFileButton=new JButton("Select File...");
@@ -89,6 +91,17 @@ public class BattleShip extends JFrame
 	JMenuItem howToMenu = new JMenuItem("How To");
 	JMenuItem aboutMenu=new JMenuItem("About");
 	
+	//timer and log
+	JLabel timeLabel= new JLabel("0:25");
+	int seconds=25;
+	Timer time;
+	boolean turn=true;//true is for the player/false for computer (so player goes first)
+	int computerSeconds;//this will be the random time assigned to the computer's turn 
+	JTextArea log =new JTextArea();
+	JScrollPane scroll = new JScrollPane (log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	JPanel south=new JPanel(new BorderLayout());//holds buttons to  file and start
+	
+	
 	public BattleShip()
 	{
 		fillUserGrid();//this will instantiate userArray with X's
@@ -100,7 +113,10 @@ public class BattleShip extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel north=new JPanel(new FlowLayout(FlowLayout.CENTER));
-		north.add(new JLabel("PLAYER                                                                    COMPUTER"));
+		north.setAlignmentX(100);
+		north.add(new JLabel("PLAYER                                                  "));
+		north.add(timeLabel);
+		north.add(new JLabel("                                             COMPUTER"));
 		add(north,BorderLayout.NORTH);
 		
 		JPanel center=new JPanel(new FlowLayout());//center holds the left and right grids
@@ -115,11 +131,10 @@ public class BattleShip extends JFrame
 		center.add(right);
 		add(center,BorderLayout.CENTER);
 		
-		JPanel south=new JPanel(new BorderLayout());//holds buttons to  file and start
+		//JPanel south=new JPanel(new BorderLayout());//holds buttons to  file and start
 		JPanel southLeft=new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel southRight=new JPanel(new FlowLayout(FlowLayout.LEFT));
 		
-		southLeft.add(log);
 		southRight.add(selectFileButton);
 		southRight.add(fileName);
 		southRight.add(startButton);
@@ -151,6 +166,65 @@ public class BattleShip extends JFrame
 		setVisible(true);
 	}
 	
+	//timer action
+	private void timerAction()
+	{
+		timeLabel.setText("0:25");//reseting the label for when a players makes their decision
+		
+		//this is the actionlistener for the timer
+		ActionListener timePerformer = new ActionListener() {
+		      public void actionPerformed(ActionEvent evt) {
+		    	  seconds--;
+		    	  if(seconds<10)//if our time is 9 or less we have one digit seconds so we need to account for that
+		    	  {
+			    	  timeLabel.setText("0:0"+seconds);
+		    	  }
+		    	  else timeLabel.setText("0:"+seconds);
+		    	  
+		    	  if(seconds==0)//we player ran out of time
+		          {
+		        	  seconds=25;
+		        	  timeLabel.setText("0:25");
+		        	  if(turn==true)//if player ran out of time
+	        		  {
+		        		  turn=false;//player runs out of time computer turn
+		        		  seconds=25;//reseting the timer
+							int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
+							//within 10 seconds(60% chance)
+							if(randomNum<=6)computerSeconds=25-(randomNum+(new Random().nextInt((4 - 0) + 1) + 0));
+							//11-25 seconds(20% chance)
+							else if(randomNum>6 && randomNum<10)computerSeconds=25-(11+(new Random().nextInt((14 - 0) + 1) + 0));
+							//>25 seconds (20% chance)
+							else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
+							//compShooter();//if we haven't won then the computer shoots
+							System.out.println("the computer will take:"+computerSeconds+" seconds");
+	        		  }
+		        	  else turn=true;//computer runs out of player's turn
+		          }
+		          else
+		          {
+		        	  //when computer "decides" to make turn
+		        	  if(turn==false && computerSeconds==seconds)
+		        	  {
+		        		  compShooter();
+		        	  }
+		        	  
+			    	 /* seconds--;
+			    	  if(seconds<10)//if our time is 9 or less we have one digit seconds so we need to account for that
+			    	  {
+				    	  timeLabel.setText("0:0"+seconds);
+			    	  }
+			    	  else timeLabel.setText("0:"+seconds);*/
+		          }
+		      }
+		  };
+		  
+		//instantiating the timer to perform every 1000 milliseconds (or 1 sec)  
+		time=new Timer(1000,timePerformer);
+		time.start();
+	}
+	
+	//action listeners for the menus
 	private void menuListeners()
 	{
 		howToMenu.addActionListener(new ActionListener()
@@ -175,7 +249,6 @@ public class BattleShip extends JFrame
 			}
 		});
 	}
-	
 	
 	//fills the userGrid array with x's
 	private void fillUserGrid()
@@ -346,13 +419,13 @@ public class BattleShip extends JFrame
 					{
 						if(rightGrid[i1][j1].press)
 						{
-							if(editMode==true)
+							if(editMode==true || turn==false)
 							{
-								//do nothing to the right grid in edit mode
+								//do nothing to the right grid in edit mode or not the players turn!!
 							}
 							else//when we're in playing mode then we want to play!!!!
 							{
-								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X' && compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='O')//it's not a ship nore have we aims for it before
+								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X' && compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='O')//it's not a ship nor have we aimed for it before
 								{
 									String label=Character.toString(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]);
 									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(hit);
@@ -360,20 +433,55 @@ public class BattleShip extends JFrame
 									compHits++;
 									
 									playersAim= getCharForNumber2(rightGrid[i1][j1].y)+rightGrid[i1][j1].x;
-									log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
 									if(compHits>=16)
 									{
 										new winnerWindow("You");
+										//TODO then we have to stop the clock!!!
 									}
-									else compShooter();//if we haven't won then the computer shoots
+									else
+									{
+										turn=false;//making it the computer's turn now, player clicks disabled
+										seconds=25;//reseting the timer
+										
+										/*generating a random number
+										 * i'm going to make the number of seconds probabilistic 
+										 * so that for the most part the computer aims within 10 seconds
+										 * but in a few cases 10-25 secs, and very rarely runs out of time*/
+										int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
+										//within 10 seconds(60% chance)
+										if(randomNum<=6)computerSeconds=25-(randomNum+(new Random().nextInt((4 - 0) + 1) + 0));
+										//11-25 seconds(20% chance)
+										else if(randomNum>6 && randomNum<10)computerSeconds=25-(11+(new Random().nextInt((14 - 0) + 1) + 0));
+										//>25 seconds (20% chance)
+										else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
+										//compShooter();//if we haven't won then the computer shoots
+										System.out.println("the computer will take:"+computerSeconds+" seconds");
+									}
 								}
 								else if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]=='X')//you did miss
 								{
 									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(miss);
 										compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
 										playersAim= getCharForNumber2(rightGrid[i1][j1].y)+rightGrid[i1][j1].x;
-										log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
-										compShooter();
+										
+										
+										turn=false;//making it the computer's turn now, player clicks disabled
+										seconds=25;//reseting the timer
+										
+										/*generating a random number
+										 * i'm going to make the number of seconds probabilistic 
+										 * so that for the most part the computer aims within 10 seconds
+										 * but in a few cases 10-25 secs, and very rarely runs out of time*/
+										int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
+										//within 10 seconds(60% chance)
+										if(randomNum<=6)computerSeconds=25-(randomNum+(new Random().nextInt((4 - 0) + 1) + 0));
+										//11-25 seconds(20% chance)
+										else if(randomNum>6 && randomNum<10)computerSeconds=25-(11+(new Random().nextInt((14 - 0) + 1) + 0));
+										//>25 seconds (20% chance)
+										else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
+										//we shouldn't call compshooter again because it's not instantaneous TODO ?? 
+										//compShooter();//if we haven't won then the computer shoots
+										System.out.println("the computer will take:"+computerSeconds+" seconds");
 								}
 							}
 						}
@@ -440,18 +548,22 @@ public class BattleShip extends JFrame
 			userGrid[x][y]='O';//marking that computer missed
 			userHits++;
 			computersAim= getCharForNumber2(y+1)+(x+1);
-			log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
 			if(userHits==16)//if the computer has hit all ships
 			{
 				new winnerWindow("Computer");
 			}
+			else turn=true;//player's turn otherwise
+			seconds=25;
+			timeLabel.setText("0:25");
 		}
-		else if(userGrid[x][y]=='X')//if the computer has aimed at that before it aims again
+		else if(userGrid[x][y]=='X')//if the computer misses
 		{
 			userGrid[x][y]='O';
 			leftGrid[x+1][y].setIcon(miss);
 			computersAim= getCharForNumber2(y+1)+(x+1);
-			log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
+			turn=true;//player's turn 
+			seconds=25;
+			timeLabel.setText("0:25");
 		}
 		else//computer hit's something already hit
 		{
@@ -603,11 +715,19 @@ public class BattleShip extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				log.setText("Log: Player:"+playersAim+" Computer:"+computersAim);
 				selectFileButton.setVisible(false);
 				startButton.setVisible(false);
 				fileName.setText("");//delete the text instead of setting invisible because then i only have to reset in new game
 				editMode=false;
+				
+				timerAction();//timer starts working once we press start
+				setSize(690,600);//changing the size of the frame for the log
+				log.setLineWrap(true);
+			    log.setWrapStyleWord(true);
+			    log.setPreferredSize(new Dimension(690, 150));
+			    south.setBorder(BorderFactory.createTitledBorder("Game Log"));
+				south.add(scroll);
+				
 			}
 		});
 	}
@@ -1059,7 +1179,6 @@ public class BattleShip extends JFrame
 				}
 			}
 			
-			log.setText("Log: You are in edit mode, click to place your ships.");
 			playersAim="N/A";
 			computersAim="N/A";
 			selectFileButton.setVisible(true);;
