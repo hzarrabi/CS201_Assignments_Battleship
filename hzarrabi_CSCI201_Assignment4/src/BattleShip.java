@@ -187,6 +187,7 @@ public class BattleShip extends JFrame
 		        	  timeLabel.setText("0:25");
 		        	  if(turn==true)//if player ran out of time
 	        		  {
+		        		  log.append("You ran out of time!");
 		        		  turn=false;//player runs out of time computer turn
 		        		  seconds=25;//reseting the timer
 							int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
@@ -199,7 +200,11 @@ public class BattleShip extends JFrame
 							//compShooter();//if we haven't won then the computer shoots
 							System.out.println("the computer will take:"+computerSeconds+" seconds");
 	        		  }
-		        	  else turn=true;//computer runs out of player's turn
+		        	  else
+		        	  {
+		        		  log.append("Computer ran out of time!");
+		        		  turn=true;//computer runs out of time player's turn
+		        	  }
 		          }
 		          else
 		          {
