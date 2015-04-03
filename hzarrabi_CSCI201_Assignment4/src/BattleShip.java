@@ -92,15 +92,15 @@ public class BattleShip extends JFrame
 	JMenuItem aboutMenu=new JMenuItem("About");
 	
 	//timer and log
-	JLabel timeLabel= new JLabel("0:25");
-	int seconds=25;
+	JLabel timeLabel= new JLabel("0:15");
+	int seconds=15;
 	Timer time;
 	boolean turn=true;//true is for the player/false for computer (so player goes first)
 	int computerSeconds;//this will be the random time assigned to the computer's turn 
 	JTextArea log =new JTextArea();
 	JScrollPane scroll = new JScrollPane (log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	JPanel south=new JPanel(new BorderLayout());//holds buttons to  file and start
-	
+	int round=1;
 	
 	public BattleShip()
 	{
@@ -169,7 +169,7 @@ public class BattleShip extends JFrame
 	//timer action
 	private void timerAction()
 	{
-		timeLabel.setText("0:25");//reseting the label for when a players makes their decision
+		timeLabel.setText("0:15");//reseting the label for when a players makes their decision
 		
 		//this is the actionlistener for the timer
 		ActionListener timePerformer = new ActionListener() {
@@ -178,31 +178,36 @@ public class BattleShip extends JFrame
 		    	  if(seconds<10)//if our time is 9 or less we have one digit seconds so we need to account for that
 		    	  {
 			    	  timeLabel.setText("0:0"+seconds);
+			    	  if(seconds==3) log.append("Warning - 3 seconds left in the round!\n");
 		    	  }
 		    	  else timeLabel.setText("0:"+seconds);
 		    	  
-		    	  if(seconds==0)//we player ran out of time
+		    	  if(seconds==0)
 		          {
-		        	  seconds=25;
-		        	  timeLabel.setText("0:25");
+		        	  seconds=15;
+		        	  timeLabel.setText("0:15");
 		        	  if(turn==true)//if player ran out of time
 	        		  {
-		        		  log.append("You ran out of time!");
+		        		  log.append("You ran out of time!\n");
 		        		  turn=false;//player runs out of time computer turn
-		        		  seconds=25;//reseting the timer
+		        		  seconds=15;//reseting the timer
+		        		  timeLabel.setText("0:15");
 							int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
 							//within 10 seconds(60% chance)
-							if(randomNum<=6)computerSeconds=25-(randomNum+(new Random().nextInt((4 - 0) + 1) + 0));
-							//11-25 seconds(20% chance)
-							else if(randomNum>6 && randomNum<10)computerSeconds=25-(11+(new Random().nextInt((14 - 0) + 1) + 0));
+							if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
+							//11-25 seconds(30% chance)
+							else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
 							//>25 seconds (20% chance)
 							else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
 							//compShooter();//if we haven't won then the computer shoots
+							System.out.println(randomNum);
 							System.out.println("the computer will take:"+computerSeconds+" seconds");
 	        		  }
 		        	  else
 		        	  {
-		        		  log.append("Computer ran out of time!");
+		        		  log.append("Computer ran out of time!\n");
+		        		  round++;
+		        		  log.append("Round "+ round +  "\n");
 		        		  turn=true;//computer runs out of time player's turn
 		        	  }
 		          }
@@ -214,12 +219,7 @@ public class BattleShip extends JFrame
 		        		  compShooter();
 		        	  }
 		        	  
-			    	 /* seconds--;
-			    	  if(seconds<10)//if our time is 9 or less we have one digit seconds so we need to account for that
-			    	  {
-				    	  timeLabel.setText("0:0"+seconds);
-			    	  }
-			    	  else timeLabel.setText("0:"+seconds);*/
+
 		          }
 		      }
 		  };
@@ -437,6 +437,8 @@ public class BattleShip extends JFrame
 									compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
 									compHits++;
 									
+									log.append("You hit a ship!\n");//TODO you have to specify what ship they hit or SANK!!
+									
 									playersAim= getCharForNumber2(rightGrid[i1][j1].y)+rightGrid[i1][j1].x;
 									if(compHits>=16)
 									{
@@ -446,20 +448,19 @@ public class BattleShip extends JFrame
 									else
 									{
 										turn=false;//making it the computer's turn now, player clicks disabled
-										seconds=25;//reseting the timer
+										seconds=15;//reseting the timer
+										timeLabel.setText("0:15");
+									
 										
-										/*generating a random number
-										 * i'm going to make the number of seconds probabilistic 
-										 * so that for the most part the computer aims within 10 seconds
-										 * but in a few cases 10-25 secs, and very rarely runs out of time*/
 										int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
 										//within 10 seconds(60% chance)
-										if(randomNum<=6)computerSeconds=25-(randomNum+(new Random().nextInt((4 - 0) + 1) + 0));
-										//11-25 seconds(20% chance)
-										else if(randomNum>6 && randomNum<10)computerSeconds=25-(11+(new Random().nextInt((14 - 0) + 1) + 0));
+										if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
+										//11-25 seconds(30% chance)
+										else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
 										//>25 seconds (20% chance)
 										else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
 										//compShooter();//if we haven't won then the computer shoots
+										System.out.println(randomNum);
 										System.out.println("the computer will take:"+computerSeconds+" seconds");
 									}
 								}
@@ -469,25 +470,24 @@ public class BattleShip extends JFrame
 										compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
 										playersAim= getCharForNumber2(rightGrid[i1][j1].y)+rightGrid[i1][j1].x;
 										
+										log.append("You missed!\n");
 										
 										turn=false;//making it the computer's turn now, player clicks disabled
-										seconds=25;//reseting the timer
+										seconds=15;//reseting the timer
+										timeLabel.setText("0:15");
 										
-										/*generating a random number
-										 * i'm going to make the number of seconds probabilistic 
-										 * so that for the most part the computer aims within 10 seconds
-										 * but in a few cases 10-25 secs, and very rarely runs out of time*/
 										int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
 										//within 10 seconds(60% chance)
-										if(randomNum<=6)computerSeconds=25-(randomNum+(new Random().nextInt((4 - 0) + 1) + 0));
-										//11-25 seconds(20% chance)
-										else if(randomNum>6 && randomNum<10)computerSeconds=25-(11+(new Random().nextInt((14 - 0) + 1) + 0));
+										if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
+										//11-25 seconds(30% chance)
+										else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
 										//>25 seconds (20% chance)
 										else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
-										//we shouldn't call compshooter again because it's not instantaneous TODO ?? 
 										//compShooter();//if we haven't won then the computer shoots
+										System.out.println(randomNum);
 										System.out.println("the computer will take:"+computerSeconds+" seconds");
 								}
+								else log.append("You've already aimed here! Aim again!\n");
 							}
 						}
 					}
@@ -550,7 +550,7 @@ public class BattleShip extends JFrame
 		if(userGrid[x][y]!='X' && userGrid[x][y]!='O')//if comp hits a target
 		{
 			leftGrid[x+1][y].setIcon(hit);
-			userGrid[x][y]='O';//marking that computer missed
+			userGrid[x][y]='O';//marking that computer shot here
 			userHits++;
 			computersAim= getCharForNumber2(y+1)+(x+1);
 			if(userHits==16)//if the computer has hit all ships
@@ -558,8 +558,12 @@ public class BattleShip extends JFrame
 				new winnerWindow("Computer");
 			}
 			else turn=true;//player's turn otherwise
-			seconds=25;
-			timeLabel.setText("0:25");
+			seconds=15;
+			timeLabel.setText("0:15");
+			
+			log.append("Computer hit a ship!\n");//TODO specify what ship hit/SANK
+			round++;
+			log.append("Round "+ round +"\n");
 		}
 		else if(userGrid[x][y]=='X')//if the computer misses
 		{
@@ -567,8 +571,12 @@ public class BattleShip extends JFrame
 			leftGrid[x+1][y].setIcon(miss);
 			computersAim= getCharForNumber2(y+1)+(x+1);
 			turn=true;//player's turn 
-			seconds=25;
-			timeLabel.setText("0:25");
+			seconds=15;
+			timeLabel.setText("0:15");
+			
+			log.append("Computer missed!\n");
+			round++;
+			log.append("Round "+ round +"\n");
 		}
 		else//computer hit's something already hit
 		{
@@ -732,6 +740,8 @@ public class BattleShip extends JFrame
 			    scroll.setPreferredSize(new Dimension(690, 150));
 			    south.setBorder(BorderFactory.createTitledBorder("Game Log"));
 				south.add(scroll);
+				
+				log.append("Round 1\n");
 				
 			}
 		});
