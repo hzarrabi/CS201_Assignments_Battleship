@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,6 +22,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -103,8 +108,48 @@ public class BattleShip extends JFrame
 	JPanel south=new JPanel(new BorderLayout());//holds buttons to  file and start
 	int round=1;
 	
+	//animations
+	BufferedImage wave1;
+	BufferedImage wave2;
+	
+	BufferedImage expl1;
+	BufferedImage expl2;
+	BufferedImage expl3;
+	BufferedImage expl4;
+	BufferedImage expl5;
+	BufferedImage[] expl = new BufferedImage[5];
+		//--
+	AudioInputStream cannon;
+	AudioInputStream explode;
+	AudioInputStream sinking;
+	AudioInputStream splashSound;
+		//--
+	BufferedImage splash1;
+	BufferedImage splash2;
+	BufferedImage splash3;
+	BufferedImage splash4;
+	BufferedImage splash5;
+	BufferedImage splash6;
+	BufferedImage splash7;
+	BufferedImage[] splash = new BufferedImage[7];
+		//--
+	BufferedImage imageA;
+	BufferedImage imageB;
+	BufferedImage imageC;
+	BufferedImage imageD;
+	BufferedImage imageM;
+	BufferedImage imageQ;
+	BufferedImage imageX;
+	
+
+	
+	
+
+	
 	public BattleShip()
 	{
+		load();
+		
 		fillUserGrid();//this will instantiate userArray with X's
 		
 		setTitle("BattleShip");
@@ -165,7 +210,49 @@ public class BattleShip extends JFrame
 		right.setBackground(Color.cyan);
 		setResizable(false);
 		setVisible(true);
+	}	
+	
+	//loads images and sounds etc
+	private void load()
+	{
+		try
+		{
+			wave1=ImageIO.read(new File("4Resources/animatedWater/water1.png"));
+			wave2=ImageIO.read(new File("4Resources/animatedWater/water2.png"));
+			
+			for(int i=0;i<5;i++)
+			{
+				expl[i]=ImageIO.read(new File("4Resources/explosion/expl"+(i+1)+".png"));
+			}
+			
+			cannon=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/cannon.wav"));
+			explode=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/explode.wav"));
+			sinking=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/sinking.wav"));
+			splashSound=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/splash.wav"));
+			
+			for(int i=0;i<7;i++)
+			{
+				splash[i]=ImageIO.read(new File("4Resources/splash/splash"+(i+1)+".png"));
+			}
+			
+			imageA=ImageIO.read(new File("4Resources/Tiles/A.png"));
+			imageB=ImageIO.read(new File("4Resources/Tiles/B.png"));
+			imageC=ImageIO.read(new File("4Resources/Tiles/C.png"));
+			imageD=ImageIO.read(new File("4Resources/Tiles/D.png"));
+			imageM=ImageIO.read(new File("4Resources/Tiles/M.png"));
+			imageQ=ImageIO.read(new File("4Resources/Tiles/Q.png"));
+			imageX=ImageIO.read(new File("4Resources/Tiles/X.png"));
+		}
+		catch(IOException ioe)
+		{	
+			System.out.println("whasdf");
+		} 
+		catch (UnsupportedAudioFileException e)
+		{
+			System.out.println("whatt");
+		}
 	}
+	
 	
 	//timer action
 	private void timerAction()
@@ -272,7 +359,7 @@ public class BattleShip extends JFrame
 				leftGrid[i][j]=new GridLabel(i,j+1);
 				if(i>0 && j<10)
 				{
-					leftGrid[i][j].setIcon(wave);//initialize all question marks initially
+					//leftGrid[i][j].setIcon(wave);//initialize all question marks initially
 				}
 			}
 		}
@@ -340,7 +427,7 @@ public class BattleShip extends JFrame
 				rightGrid[i][j]=new GridLabel(i,j+1);
 				if(i>0 && j<10)
 				{
-					rightGrid[i][j].setIcon(wave);//initialize all question marks initially
+					//rightGrid[i][j].setIcon(wave);//initialize all question marks initially
 				}
 			}
 		}
@@ -1336,6 +1423,51 @@ public class BattleShip extends JFrame
 		
 	}
 	
+	private class GridLabel extends JLabel implements Runnable
+	{
+		public int x;
+		public int y;
+		public boolean press; 
+		
+		ImageIcon wave1=new ImageIcon(BattleShip.this.wave1);//makes the wave equal to the wave in outer class (passing reference)
+		ImageIcon wave2=new ImageIcon(BattleShip.this.wave2);
+		ImageIcon currentWave;
+		   int current=0;
+
+		
+		public GridLabel(int x, int y)
+		{
+			this.x=x;
+			this.y=y;
+			press=true;
+			if(x>0 && y<11)setIcon(wave1);
+			
+			new Thread(this).start();
+		}
+
+		@Override
+		public void run()
+		{
+		   while (true) 
+		   {
+		    if(current == 0)
+		    {
+		     //currentWave = wave1;
+		    if(x>0 && y<11)setIcon(wave1); 
+		    current++;
+		    }
+		    else
+		    {
+		     //currentWave = wave2;
+		     if(x>0 && y<11)setIcon(wave2);
+		     current--;
+		    }
+		    repaint();
+		    try { Thread.sleep(150); }
+		    catch (InterruptedException e) { }
+		   }
+	   }
+	}
 	
 	//==============================================================
 	public static void main(String[] args)
