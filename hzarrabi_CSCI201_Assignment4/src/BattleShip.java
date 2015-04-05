@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MenuBar;
@@ -30,9 +31,11 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -46,14 +49,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.html.BlockView;
 import javax.swing.Timer;
 
 
 
 public class BattleShip extends JFrame
 {
-	private GridLabel leftGrid[][]=new GridLabel[11][11];
-	private GridLabel rightGrid[][]=new GridLabel[11][11];
+	private JComponent  leftGrid[][]=new JComponent[11][11];
+	private JComponent rightGrid[][]=new JComponent[11][11];
 	private char compGrid[][]=new char[10][10];//this is the one we click on
 	private char userGrid[][]=new char[10][10];//this is the one the computer guesses 
 	
@@ -363,50 +367,50 @@ public class BattleShip extends JFrame
 				}
 			}
 		}
-		leftGrid[0][0].setText("A");
-		leftGrid[0][0].press=false;
-		leftGrid[0][1].setText("B");
-		leftGrid[0][1].press=false;
-		leftGrid[0][2].setText("C");
-		leftGrid[0][2].press=false;
-		leftGrid[0][3].setText("D");
-		leftGrid[0][3].press=false;
-		leftGrid[0][4].setText("E");
-		leftGrid[0][4].press=false;
-		leftGrid[0][5].setText("F");
-		leftGrid[0][5].press=false;
-		leftGrid[0][6].setText("G");
-		leftGrid[0][6].press=false;
-		leftGrid[0][7].setText("H");
-		leftGrid[0][7].press=false;
-		leftGrid[0][8].setText("I");
-		leftGrid[0][8].press=false;
-		leftGrid[0][9].setText("J");
-		leftGrid[0][9].press=false;
-		leftGrid[0][10].setText(" ");
-		leftGrid[0][10].press=false;
+		((GridLabel)leftGrid[0][0]).add(new JLabel("A"));
+		((GridLabel)leftGrid[0][0]).press=false;
+		((GridLabel)leftGrid[0][1]).add(new JLabel("B"));
+		((GridLabel)leftGrid[0][1]).press=false;
+		((GridLabel)leftGrid[0][2]).add(new JLabel("C"));
+		((GridLabel)leftGrid[0][2]).press=false;
+		((GridLabel)leftGrid[0][3]).add(new JLabel("D"));
+		((GridLabel)leftGrid[0][3]).press=false;
+		((GridLabel)leftGrid[0][4]).add(new JLabel("E"));
+		((GridLabel)leftGrid[0][4]).press=false;
+		((GridLabel)leftGrid[0][5]).add(new JLabel("F"));
+		((GridLabel)leftGrid[0][5]).press=false;
+		((GridLabel)leftGrid[0][6]).add(new JLabel("G"));
+		((GridLabel)leftGrid[0][6]).press=false;
+		((GridLabel)leftGrid[0][7]).add(new JLabel("H"));
+		((GridLabel)leftGrid[0][7]).press=false;
+		((GridLabel)leftGrid[0][8]).add(new JLabel("I"));
+		((GridLabel)leftGrid[0][8]).press=false;
+		((GridLabel)leftGrid[0][9]).add(new JLabel("J"));
+		((GridLabel)leftGrid[0][9]).press=false;
+		((GridLabel)leftGrid[0][10]).add(new JLabel(" "));
+		((GridLabel)leftGrid[0][10]).press=false;
 
 		
-		leftGrid[1][10].setText("1");
-		leftGrid[1][10].press=false;
-		leftGrid[2][10].setText("2");
-		leftGrid[2][10].press=false;
-		leftGrid[3][10].setText("3");
-		leftGrid[3][10].press=false;
-		leftGrid[4][10].setText("4");
-		leftGrid[4][10].press=false;
-		leftGrid[5][10].setText("5");
-		leftGrid[5][10].press=false;
-		leftGrid[6][10].setText("6");
-		leftGrid[6][10].press=false;
-		leftGrid[7][10].setText("7");
-		leftGrid[7][10].press=false;
-		leftGrid[8][10].setText("8");
-		leftGrid[8][10].press=false;
-		leftGrid[9][10].setText("9");
-		leftGrid[9][10].press=false;
-		leftGrid[10][10].setText("10");
-		leftGrid[10][10].press=false;
+		((GridLabel)leftGrid[1][10]).add(new JLabel("1"));
+		((GridLabel)leftGrid[1][10]).press=false;
+		((GridLabel)leftGrid[2][10]).add(new JLabel("2"));
+		((GridLabel)leftGrid[2][10]).press=false;
+		((GridLabel)leftGrid[3][10]).add(new JLabel("3"));
+		((GridLabel)leftGrid[3][10]).press=false;
+		((GridLabel)leftGrid[4][10]).add(new JLabel("4"));
+		((GridLabel)leftGrid[4][10]).press=false;
+		((GridLabel)leftGrid[5][10]).add(new JLabel("5"));
+		((GridLabel)leftGrid[5][10]).press=false;
+		((GridLabel)leftGrid[6][10]).add(new JLabel("6"));
+		((GridLabel)leftGrid[6][10]).press=false;
+		((GridLabel)leftGrid[7][10]).add(new JLabel("7"));
+		((GridLabel)leftGrid[7][10]).press=false;
+		((GridLabel)leftGrid[8][10]).add(new JLabel("8"));
+		((GridLabel)leftGrid[8][10]).press=false;
+		((GridLabel)leftGrid[9][10]).add(new JLabel("9"));
+		((GridLabel)leftGrid[9][10]).press=false;
+		((GridLabel)leftGrid[10][10]).add(new JLabel("10"));
+		((GridLabel)leftGrid[10][10]).press=false;
 		
 		//adding the labels
 		for (int j=0;j<11;j++)
@@ -431,50 +435,50 @@ public class BattleShip extends JFrame
 				}
 			}
 		}
-		rightGrid[0][0].setText("A");
-		rightGrid[0][0].press=false;
-		rightGrid[0][1].setText("B");
-		rightGrid[0][1].press=false;
-		rightGrid[0][2].setText("C");
-		rightGrid[0][2].press=false;
-		rightGrid[0][3].setText("D");
-		rightGrid[0][3].press=false;
-		rightGrid[0][4].setText("E");
-		rightGrid[0][4].press=false;
-		rightGrid[0][5].setText("F");
-		rightGrid[0][5].press=false;
-		rightGrid[0][6].setText("G");
-		rightGrid[0][6].press=false;
-		rightGrid[0][7].setText("H");
-		rightGrid[0][7].press=false;
-		rightGrid[0][8].setText("I");
-		rightGrid[0][8].press=false;
-		rightGrid[0][9].setText("J");
-		rightGrid[0][9].press=false;
-		rightGrid[0][10].setText(" ");
-		rightGrid[0][10].press=false;
+		((GridLabel)rightGrid[0][0]).add(new JLabel("A"));
+		((GridLabel)rightGrid[0][0]).press=false;
+		((GridLabel)rightGrid[0][1]).add(new JLabel("B"));
+		((GridLabel)rightGrid[0][1]).press=false;
+		((GridLabel)rightGrid[0][2]).add(new JLabel("C"));
+		((GridLabel)rightGrid[0][2]).press=false;
+		((GridLabel)rightGrid[0][3]).add(new JLabel("D"));
+		((GridLabel)rightGrid[0][3]).press=false;
+		((GridLabel)rightGrid[0][4]).add(new JLabel("E"));
+		((GridLabel)rightGrid[0][4]).press=false;
+		((GridLabel)rightGrid[0][5]).add(new JLabel("F"));
+		((GridLabel)rightGrid[0][5]).press=false;
+		((GridLabel)rightGrid[0][6]).add(new JLabel("G"));
+		((GridLabel)rightGrid[0][6]).press=false;
+		((GridLabel)rightGrid[0][7]).add(new JLabel("H"));
+		((GridLabel)rightGrid[0][7]).press=false;
+		((GridLabel)rightGrid[0][8]).add(new JLabel("I"));
+		((GridLabel)rightGrid[0][8]).press=false;
+		((GridLabel)rightGrid[0][9]).add(new JLabel("J"));
+		((GridLabel)rightGrid[0][9]).press=false;
+		((GridLabel)rightGrid[0][10]).add(new JLabel(" "));
+		((GridLabel)rightGrid[0][10]).press=false;
 
 		
-		rightGrid[1][10].setText("1");
-		rightGrid[1][10].press=false;
-		rightGrid[2][10].setText("2");
-		rightGrid[2][10].press=false;
-		rightGrid[3][10].setText("3");
-		rightGrid[3][10].press=false;
-		rightGrid[4][10].setText("4");
-		rightGrid[4][10].press=false;
-		rightGrid[5][10].setText("5");
-		rightGrid[5][10].press=false;
-		rightGrid[6][10].setText("6");
-		rightGrid[6][10].press=false;
-		rightGrid[7][10].setText("7");
-		rightGrid[7][10].press=false;
-		rightGrid[8][10].setText("8");
-		rightGrid[8][10].press=false;
-		rightGrid[9][10].setText("9");
-		rightGrid[9][10].press=false;
-		rightGrid[10][10].setText("10");
-		rightGrid[10][10].press=false;
+		((GridLabel)rightGrid[1][10]).add(new JLabel("1"));
+		((GridLabel)rightGrid[1][10]).press=false;
+		((GridLabel)rightGrid[2][10]).add(new JLabel("2"));
+		((GridLabel)rightGrid[2][10]).press=false;
+		((GridLabel)rightGrid[3][10]).add(new JLabel("3"));
+		((GridLabel)rightGrid[3][10]).press=false;
+		((GridLabel)rightGrid[4][10]).add(new JLabel("4"));
+		((GridLabel)rightGrid[4][10]).press=false;
+		((GridLabel)rightGrid[5][10]).add(new JLabel("5"));
+		((GridLabel)rightGrid[5][10]).press=false;
+		((GridLabel)rightGrid[6][10]).add(new JLabel("6"));
+		((GridLabel)rightGrid[6][10]).press=false;
+		((GridLabel)rightGrid[7][10]).add(new JLabel("7"));
+		((GridLabel)rightGrid[7][10]).press=false;
+		((GridLabel)rightGrid[8][10]).add(new JLabel("8"));
+		((GridLabel)rightGrid[8][10]).press=false;
+		((GridLabel)rightGrid[9][10]).add(new JLabel("9"));
+		((GridLabel)rightGrid[9][10]).press=false;
+		((GridLabel)rightGrid[10][10]).add(new JLabel("10"));
+		((GridLabel)rightGrid[10][10]).press=false;
 		
 		//adding the labels
 		for (int j=0;j<11;j++)
@@ -504,7 +508,7 @@ public class BattleShip extends JFrame
 				{
 					public void mouseClicked(MouseEvent e)
 					{
-						if(rightGrid[i1][j1].press)
+						if(((GridLabel)rightGrid[i1][j1]).press)
 						{
 							if(editMode==true || playerShot==true)
 							{
@@ -512,16 +516,18 @@ public class BattleShip extends JFrame
 							}
 							else//when we're in playing mode then we want to play!!!!
 							{
-								if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='X' && compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]!='O')//you hit a ship!!
+								if(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]!='X' && compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]!='O')//you hit a ship!!
 								{
-									String label=Character.toString(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]);
-									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(hit);
-									compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
+									char theChar=compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1];
+									String label=Character.toString(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]);
+									//rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(hit);
+									//TODO
+									compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]='O';
 									compHits++;
 									
 									log.append("You hit a ship!\n");//TODO you have to specify what ship they hit or SANK!!
 									
-									playersAim= getCharForNumber2(rightGrid[i1][j1].y)+rightGrid[i1][j1].x;
+									playersAim= getCharForNumber2(((GridLabel)rightGrid[i1][j1]).y)+((GridLabel)rightGrid[i1][j1]).x;
 									if(compHits>=16)
 									{
 										new winnerWindow("You");
@@ -552,11 +558,13 @@ public class BattleShip extends JFrame
 										}
 									}
 								}
-								else if(compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]=='X')//you did miss
+								else if(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]=='X')//you did miss
 								{
-									rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(miss);
-										compGrid[rightGrid[i1][j1].x-1][rightGrid[i1][j1].y-1]='O';
-										playersAim= getCharForNumber2(rightGrid[i1][j1].y)+rightGrid[i1][j1].x;
+									//rightGrid[((GridLabel)rightGrid[i1][j1]).x][((GridLabel)rightGrid[i1][j1]).y-1].setIcon(miss);
+									((GridLabel)rightGrid[i1][j1]).explode('X', true);
+									//TODO	
+									compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]='O';
+										playersAim= getCharForNumber2(((GridLabel)rightGrid[i1][j1]).y)+((GridLabel)rightGrid[i1][j1]).x;
 										
 										log.append("You missed!\n");
 										
@@ -605,18 +613,18 @@ public class BattleShip extends JFrame
 				{
 					public void mouseClicked(MouseEvent e)
 					{
-						if(leftGrid[i1][j1].press)
+						if(((GridLabel)leftGrid[i1][j1]).press)
 						{
 						    if(editMode==true)//we only want this functionality if we are in edit mode
 						    {
-								if(userGrid[leftGrid[i1][j1].x-1][leftGrid[i1][j1].y-1]=='X')//if the coordinate has no ship placed
+								if(userGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]=='X')//if the coordinate has no ship placed
 								{
 									if(carriers+battlships+cruisers+destroyers<5)//if we still have ships to place open the window
-									new shipPlacerWindow(leftGrid[i1][j1].x,leftGrid[i1][j1].y);
+									new shipPlacerWindow(((GridLabel)leftGrid[i1][j1]).x,((GridLabel)leftGrid[i1][j1]).y);
 								}
 								else
 								{
-									shipDeleter(leftGrid[i1][j1].x-1, leftGrid[i1][j1].y-1);;
+									shipDeleter(((GridLabel)leftGrid[i1][j1]).x-1, ((GridLabel)leftGrid[i1][j1]).y-1);;
 								}
 						    }
 						    else//if we are in playing mode do this
@@ -644,7 +652,8 @@ public class BattleShip extends JFrame
 		
 		if(userGrid[x][y]!='X' && userGrid[x][y]!='O')//if comp hits a target
 		{
-			leftGrid[x+1][y].setIcon(hit);
+			//leftGrid[x+1][y].setIcon(hit);
+			//TODO
 			userGrid[x][y]='O';//marking that computer shot here
 			userHits++;
 			computersAim= getCharForNumber2(y+1)+(x+1);
@@ -687,7 +696,8 @@ public class BattleShip extends JFrame
 		else if(userGrid[x][y]=='X')//if the computer misses
 		{
 			userGrid[x][y]='O';
-			leftGrid[x+1][y].setIcon(miss);
+			//leftGrid[x+1][y].setIcon(miss);
+			//TODO
 			computersAim= getCharForNumber2(y+1)+(x+1);
 			compShot=true;
 			log.append("Computer missed!\n");
@@ -767,7 +777,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y-i]='X';
-					leftGrid[x+1][y-i].setIcon(wave);
+					//leftGrid[x+1][y-i].setIcon(wave);
+					//TODO
 				}
 				else break;//if it's not stop searching the north
 			}
@@ -779,7 +790,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y-i]='X';
-					leftGrid[x+1][y-i].setIcon(wave);
+					//leftGrid[x+1][y-i].setIcon(wave);
+					//TODO
 				}
 				else break;
 			}
@@ -792,7 +804,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y+i]='X';
-					leftGrid[x+1][y+i].setIcon(wave);
+					//leftGrid[x+1][y+i].setIcon(wave);
+					//TODO
 				}
 			}
 		}
@@ -803,7 +816,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y+i]='X';
-					leftGrid[x+1][y+i].setIcon(wave);
+					//leftGrid[x+1][y+i].setIcon(wave);
+					//TODO
 				}
 			}
 		}
@@ -815,7 +829,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x-i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x-i][y]='X';
-					leftGrid[x-i+1][y].setIcon(wave);
+					//leftGrid[x-i+1][y].setIcon(wave);
+					//TODO
 				}
 				
 			}
@@ -827,7 +842,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x-i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x-i][y]='X';
-					leftGrid[x-i+1][y].setIcon(wave);
+					//leftGrid[x-i+1][y].setIcon(wave);
+					//TODO
 				}
 			}
 		}
@@ -839,7 +855,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x+i][y]='X';
-					leftGrid[x+i+1][y].setIcon(wave);
+					//leftGrid[x+i+1][y].setIcon(wave);
+					//TODO
 				}
 			}
 		}
@@ -850,7 +867,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x+i][y]='X';
-					leftGrid[x+i+1][y].setIcon(wave);
+					//leftGrid[x+i+1][y].setIcon(wave);
+					//TODO
 				}
 			}
 		}
@@ -1202,7 +1220,7 @@ public class BattleShip extends JFrame
 							{
 								userGrid[x][yTest]=shipCharacter;
 								//leftGrid[x+1][yTest].setText(shipString);
-								leftGrid[x+1][yTest].setIcon(theShip);
+								((GridLabel)leftGrid[x+1][yTest]).add(new JLabel(theShip));
 								yTest--;	
 							}
 					}
@@ -1213,7 +1231,7 @@ public class BattleShip extends JFrame
 							{
 								userGrid[x][yTest]=shipCharacter;
 								//leftGrid[x+1][yTest].setText(shipString);
-								leftGrid[x+1][yTest].setIcon(theShip);
+								((GridLabel)leftGrid[x+1][yTest]).add(new JLabel(theShip));
 								yTest++;	
 							}
 					}
@@ -1224,7 +1242,7 @@ public class BattleShip extends JFrame
 							{
 								userGrid[xTest][y]=shipCharacter;
 								//leftGrid[xTest+1][y].setText(shipString);
-								leftGrid[xTest+1][y].setIcon(theShip);
+								((GridLabel)leftGrid[xTest+1][y]).add(new JLabel(theShip));
 								xTest++;	
 							}
 					}
@@ -1235,7 +1253,7 @@ public class BattleShip extends JFrame
 							{
 								userGrid[xTest][y]=shipCharacter;
 								//leftGrid[xTest+1][y].setText(shipString);
-								leftGrid[xTest+1][y].setIcon(theShip);
+								((GridLabel)leftGrid[xTest+1][y]).add(new JLabel(theShip));
 								xTest--;	
 							}
 					}		
@@ -1304,8 +1322,8 @@ public class BattleShip extends JFrame
 				{
 					if(i>0 && j<10)
 					{
-						rightGrid[i][j].setIcon(wave1);//initialize all question marks initially
-
+						//rightGrid[i][j].setIcon(wave1);//initialize all question marks initially
+						//TODO
 					}
 				}
 			}
@@ -1317,7 +1335,8 @@ public class BattleShip extends JFrame
 				{
 					if(i>0 && j<10)
 					{
-						leftGrid[i][j].setIcon(wave1);//initialize all question marks initially
+						//leftGrid[i][j].setIcon(wave1);//initialize all question marks initially
+						//TODO
 					}
 				}
 			}
@@ -1423,28 +1442,43 @@ public class BattleShip extends JFrame
 		
 	}
 	
-	private class GridLabel extends JLabel implements Runnable
+	private class GridLabel extends JComponent implements Runnable
 	{
 		public int x;
 		public int y;
 		public boolean press; 
 		
-		ImageIcon wave1=new ImageIcon(BattleShip.this.wave1);//makes the wave equal to the wave in outer class (passing reference)
-		ImageIcon wave2=new ImageIcon(BattleShip.this.wave2);
-		ImageIcon currentWave;
-		   int current=0;
+		BufferedImage currentWave;
+		int current=0;
 
+		//for the explosion thread
+		Boolean explode;
+		int counter=0;
+		ImageIcon blastIcon;
+		Explosion ex=new Explosion();
 		
 		public GridLabel(int x, int y)
 		{
 			this.x=x;
 			this.y=y;
 			press=true;
-			if(x>0 && y<11)setIcon(wave1);
+			setPreferredSize(new Dimension(30,30));
+			setLayout(new FlowLayout());
 			
-			new Thread(this).start();
+			if(x>0 && y<11)
+			{ 
+				setBorder(BorderFactory.createLineBorder(Color.black));
+				new Thread(this).start();			
+			}
 		}
 
+		@Override
+		protected void paintComponent(Graphics g) 
+		{
+			super.paintComponent(g);
+			g.drawImage(currentWave,0,0,null);
+		};
+		
 		@Override
 		public void run()
 		{
@@ -1452,26 +1486,79 @@ public class BattleShip extends JFrame
 		   {
 		    if(current == 0)
 		    {
-		     //currentWave = wave1;
-		    if(x>0 && y<11)setIcon(wave1); 
+		    currentWave=wave1; 
 		    current++;
 		    }
 		    else
 		    {
-		     //currentWave = wave2;
-		     if(x>0 && y<11)setIcon(wave2);
+		     currentWave=wave2;
 		     current--;
 		    }
+		    validate();
 		    repaint();
 		    try { Thread.sleep(150); }
 		    catch (InterruptedException e) { }
 		   }
 	   }
+		
+		public void explode(char c, Boolean b)
+		{
+			counter=0;
+			explode=b;
+			if(c=='A') blastIcon=new ImageIcon(imageA);
+			else if(c=='B') blastIcon=new ImageIcon(imageB);
+			else if(c=='C') blastIcon=new ImageIcon(imageC);
+			else if(c=='D') blastIcon=new ImageIcon(imageD);
+			else if(c=='M') blastIcon=new ImageIcon(imageM);
+			else if(c=='Q') blastIcon=new ImageIcon(imageQ);
+			else if(c=='X') blastIcon=new ImageIcon(imageX);
+			
+			ex.start();
+		}
+		
+		public class Explosion extends Thread
+		{
+			public void run() 
+			{
+				while(true)
+				{
+					if(explode)//if you want explode animation to happen
+					{
+						System.out.println("whatsdfa");
+						if(counter<5)
+						{
+							removeAll();//removes previous icons or labels
+							add(new JLabel(new ImageIcon(expl[counter])));
+						    counter++;
+						}
+						else if(counter==5)
+						{
+							removeAll();
+							add(new JLabel(blastIcon));
+							counter++;
+						}
+						else return;//stop thread
+					}
+					else
+					{
+						removeAll();
+						add(new JLabel(blastIcon));
+						counter=0;
+						Thread.currentThread().interrupt();//stop thread
+					}
+					try
+					{sleep(150);} 
+					catch (InterruptedException e)
+					{}
+				}
+		    }
+		}
 	}
 	
 	//==============================================================
 	public static void main(String[] args)
 	{
+		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
 		new BattleShip();
 	}
 }
