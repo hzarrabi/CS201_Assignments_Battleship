@@ -518,10 +518,8 @@ public class BattleShip extends JFrame
 							{
 								if(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]!='X' && compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]!='O')//you hit a ship!!
 								{
-									char theChar=compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1];
 									String label=Character.toString(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]);
-									//rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(hit);
-									((GridLabel)rightGrid[i1][j1]).explode(theChar, true);
+									((GridLabel)rightGrid[i1][j1]).explode('X', true);
 									//TODO
 									compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]='O';
 									compHits++;
@@ -561,9 +559,7 @@ public class BattleShip extends JFrame
 								}
 								else if(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]=='X')//you did miss
 								{
-									//rightGrid[((GridLabel)rightGrid[i1][j1]).x][((GridLabel)rightGrid[i1][j1]).y-1].setIcon(miss);
-									((GridLabel)rightGrid[i1][j1]).explode('X', true);
-									//TODO	
+									((GridLabel)rightGrid[i1][j1]).explode('M', true);
 									compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]='O';
 										playersAim= getCharForNumber2(((GridLabel)rightGrid[i1][j1]).y)+((GridLabel)rightGrid[i1][j1]).x;
 										
@@ -653,8 +649,7 @@ public class BattleShip extends JFrame
 		
 		if(userGrid[x][y]!='X' && userGrid[x][y]!='O')//if comp hits a target
 		{
-			//leftGrid[x+1][y].setIcon(hit);
-			//TODO
+			((GridLabel)leftGrid[x+1][y]).explode('X', true);;
 			userGrid[x][y]='O';//marking that computer shot here
 			userHits++;
 			computersAim= getCharForNumber2(y+1)+(x+1);
@@ -697,8 +692,7 @@ public class BattleShip extends JFrame
 		else if(userGrid[x][y]=='X')//if the computer misses
 		{
 			userGrid[x][y]='O';
-			//leftGrid[x+1][y].setIcon(miss);
-			//TODO
+			((GridLabel)leftGrid[x+1][y]).explode('M',true);
 			computersAim= getCharForNumber2(y+1)+(x+1);
 			compShot=true;
 			log.append("Computer missed!\n");
@@ -1454,7 +1448,7 @@ public class BattleShip extends JFrame
 		Boolean explode;
 		int counter=0;
 		ImageIcon blastIcon;
-		Explosion ex=new Explosion();
+		char c;
 		
 		public GridLabel(int x, int y)
 		{
@@ -1505,14 +1499,17 @@ public class BattleShip extends JFrame
 		{
 			counter=0;
 			explode=b;
-			if(c=='A') blastIcon=new ImageIcon(imageA);
-			else if(c=='B') blastIcon=new ImageIcon(imageB);
-			else if(c=='C') blastIcon=new ImageIcon(imageC);
-			else if(c=='D') blastIcon=new ImageIcon(imageD);
-			else if(c=='M') blastIcon=new ImageIcon(imageM);
-			else if(c=='Q') blastIcon=new ImageIcon(imageQ);
-			else if(c=='X') blastIcon=new ImageIcon(imageX);
-						
+			this.c=c;
+			if(c=='E')this.c='D';
+			
+			if(this.c=='A') blastIcon=new ImageIcon(imageA);
+			else if(this.c=='B') blastIcon=new ImageIcon(imageB);
+			else if(this.c=='C') blastIcon=new ImageIcon(imageC);
+			else if(this.c=='D') blastIcon=new ImageIcon(imageD);
+			else if(this.c=='M') blastIcon=new ImageIcon(imageM);
+			else if(this.c=='Q') blastIcon=new ImageIcon(imageQ);
+			else if(this.c=='X') blastIcon=new ImageIcon(imageX);
+			
 			new Explosion().start();
 		}
 		
@@ -1520,31 +1517,54 @@ public class BattleShip extends JFrame
 		{
 			public void run() 
 			{
+				counter=0;
 				while(true)
 				{
-					if(explode)//if you want explode animation to happen
+					if(c!='M')//we're not idicating a miss
 					{
-						System.out.println("whatsdfa");
-						if(counter<5)
+						if(explode)//if you want explode animation to happen
 						{
-							removeAll();//removes previous icons or labels
-							add(new JLabel(new ImageIcon(expl[counter])));
-						    counter++;
+							System.out.println("whatsdfa");
+							if(counter<5)
+							{
+								removeAll();//removes previous icons or labels
+								add(new JLabel(new ImageIcon(expl[counter])));
+							    counter++;
+							}
+							else if(counter==5)
+							{
+								removeAll();
+								add(new JLabel(blastIcon));
+								counter++;
+							}
+							else return;//stop thread
 						}
-						else if(counter==5)
+						else
 						{
 							removeAll();
 							add(new JLabel(blastIcon));
+							counter=0;
+							return;//stop thread
+						}
+					}
+					else//we're indicating a miss
+					{
+						if(counter<7)
+						{
+							removeAll();
+							add(new JLabel(new ImageIcon(splash[counter])));
 							counter++;
 						}
-						else return;//stop thread
-					}
-					else
-					{
-						removeAll();
-						add(new JLabel(blastIcon));
-						counter=0;
-						return;//stop thread
+						else if(counter==7)
+						{
+							removeAll();
+							add(new JLabel(new ImageIcon(imageM))); 
+							counter++;
+						}
+						else 
+						{
+							return;	
+						}
 					}
 					try
 					{sleep(150);} 
