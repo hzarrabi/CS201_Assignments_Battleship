@@ -521,6 +521,7 @@ public class BattleShip extends JFrame
 									char theChar=compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1];
 									String label=Character.toString(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]);
 									//rightGrid[rightGrid[i1][j1].x][rightGrid[i1][j1].y-1].setIcon(hit);
+									((GridLabel)rightGrid[i1][j1]).explode(theChar, true);
 									//TODO
 									compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]='O';
 									compHits++;
@@ -777,8 +778,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y-i]='X';
-					//leftGrid[x+1][y-i].setIcon(wave);
-					//TODO
+					leftGrid[x+1][y-i].removeAll();
+					((GridLabel)leftGrid[x+1][y-i]).add(new JLabel(new ImageIcon(imageQ)));
 				}
 				else break;//if it's not stop searching the north
 			}
@@ -790,8 +791,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y-i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y-i]='X';
-					//leftGrid[x+1][y-i].setIcon(wave);
-					//TODO
+					leftGrid[x+1][y-i].removeAll();
+					((GridLabel)leftGrid[x+1][y-i]).add(new JLabel(new ImageIcon(imageQ)));
 				}
 				else break;
 			}
@@ -804,8 +805,9 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y+i]='X';
-					//leftGrid[x+1][y+i].setIcon(wave);
-					//TODO
+					leftGrid[x+1][y+i].removeAll();
+					((GridLabel)leftGrid[x+1][y+i]).add(new JLabel(new ImageIcon(imageQ)));
+					System.out.println("wesdfasdf");
 				}
 			}
 		}
@@ -816,8 +818,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x][y+i]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x][y+i]='X';
-					//leftGrid[x+1][y+i].setIcon(wave);
-					//TODO
+					leftGrid[x+1][y+i].removeAll();
+					((GridLabel)leftGrid[x+1][y+i]).add(new JLabel(new ImageIcon(imageQ)));
 				}
 			}
 		}
@@ -829,8 +831,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x-i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x-i][y]='X';
-					//leftGrid[x-i+1][y].setIcon(wave);
-					//TODO
+					leftGrid[x-i+1][y].removeAll();
+					((GridLabel)leftGrid[x-i+1][y]).add(new JLabel(new ImageIcon(imageQ)));
 				}
 				
 			}
@@ -842,8 +844,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x-i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x-i][y]='X';
-					//leftGrid[x-i+1][y].setIcon(wave);
-					//TODO
+					leftGrid[x-i+1][y].removeAll();
+					((GridLabel)leftGrid[x-i+1][y]).add(new JLabel(new ImageIcon(imageQ)));
 				}
 			}
 		}
@@ -855,8 +857,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x+i][y]='X';
-					//leftGrid[x+i+1][y].setIcon(wave);
-					//TODO
+					leftGrid[x+i+1][y].removeAll();
+					((GridLabel)leftGrid[x+i+1][y]).add(new JLabel(new ImageIcon(imageQ)));
 				}
 			}
 		}
@@ -867,8 +869,8 @@ public class BattleShip extends JFrame
 				if(userGrid[x+i][y]==shipWeWant)//if it is the ship we want
 				{
 					userGrid[x+i][y]='X';
-					//leftGrid[x+i+1][y].setIcon(wave);
-					//TODO
+					leftGrid[x+i+1][y].removeAll();
+					((GridLabel)leftGrid[x+i+1][y]).add(new JLabel(new ImageIcon(imageQ)));
 				}
 			}
 		}
@@ -1219,8 +1221,7 @@ public class BattleShip extends JFrame
 							for(int i=0;i<range;i++)
 							{
 								userGrid[x][yTest]=shipCharacter;
-								//leftGrid[x+1][yTest].setText(shipString);
-								((GridLabel)leftGrid[x+1][yTest]).add(new JLabel(theShip));
+								((GridLabel)leftGrid[x+1][yTest]).explode(shipCharacter,false);
 								yTest--;	
 							}
 					}
@@ -1230,8 +1231,7 @@ public class BattleShip extends JFrame
 							for(int i=0;i<range;i++)
 							{
 								userGrid[x][yTest]=shipCharacter;
-								//leftGrid[x+1][yTest].setText(shipString);
-								((GridLabel)leftGrid[x+1][yTest]).add(new JLabel(theShip));
+								((GridLabel)leftGrid[x+1][yTest]).explode(shipCharacter,false);
 								yTest++;	
 							}
 					}
@@ -1241,8 +1241,7 @@ public class BattleShip extends JFrame
 							for(int i=0;i<range;i++)
 							{
 								userGrid[xTest][y]=shipCharacter;
-								//leftGrid[xTest+1][y].setText(shipString);
-								((GridLabel)leftGrid[xTest+1][y]).add(new JLabel(theShip));
+								((GridLabel)leftGrid[xTest+1][y]).explode(shipCharacter,false);
 								xTest++;	
 							}
 					}
@@ -1252,8 +1251,8 @@ public class BattleShip extends JFrame
 							for(int i=0;i<range;i++)
 							{
 								userGrid[xTest][y]=shipCharacter;
-								//leftGrid[xTest+1][y].setText(shipString);
-								((GridLabel)leftGrid[xTest+1][y]).add(new JLabel(theShip));
+								((GridLabel)leftGrid[xTest+1][y]).explode(shipCharacter,false);
+								System.out.println(shipCharacter);
 								xTest--;	
 							}
 					}		
@@ -1322,8 +1321,8 @@ public class BattleShip extends JFrame
 				{
 					if(i>0 && j<10)
 					{
-						//rightGrid[i][j].setIcon(wave1);//initialize all question marks initially
-						//TODO
+						rightGrid[i][j].removeAll();
+						rightGrid[i][j].add(new JLabel(new ImageIcon(imageQ)));
 					}
 				}
 			}
@@ -1335,8 +1334,8 @@ public class BattleShip extends JFrame
 				{
 					if(i>0 && j<10)
 					{
-						//leftGrid[i][j].setIcon(wave1);//initialize all question marks initially
-						//TODO
+						leftGrid[i][j].removeAll();
+						leftGrid[i][j].add(new JLabel(new ImageIcon(imageQ)));
 					}
 				}
 			}
@@ -1468,6 +1467,7 @@ public class BattleShip extends JFrame
 			if(x>0 && y<11)
 			{ 
 				setBorder(BorderFactory.createLineBorder(Color.black));
+				add(new JLabel(new ImageIcon(imageQ)));
 				new Thread(this).start();			
 			}
 		}
@@ -1512,8 +1512,8 @@ public class BattleShip extends JFrame
 			else if(c=='M') blastIcon=new ImageIcon(imageM);
 			else if(c=='Q') blastIcon=new ImageIcon(imageQ);
 			else if(c=='X') blastIcon=new ImageIcon(imageX);
-			
-			ex.start();
+						
+			new Explosion().start();
 		}
 		
 		public class Explosion extends Thread
@@ -1544,7 +1544,7 @@ public class BattleShip extends JFrame
 						removeAll();
 						add(new JLabel(blastIcon));
 						counter=0;
-						Thread.currentThread().interrupt();//stop thread
+						return;//stop thread
 					}
 					try
 					{sleep(150);} 
