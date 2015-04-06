@@ -26,6 +26,8 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -124,9 +126,13 @@ public class BattleShip extends JFrame
 	BufferedImage[] expl = new BufferedImage[5];
 		//--
 	AudioInputStream cannon;
-	AudioInputStream explode;
+	AudioInputStream Explode;
 	AudioInputStream sinking;
 	AudioInputStream splashSound;
+	Clip cannonClip;
+	Clip ExplodeClip;
+	Clip sinkingClip;
+	Clip splashClip;
 		//--
 	BufferedImage splash1;
 	BufferedImage splash2;
@@ -145,8 +151,7 @@ public class BattleShip extends JFrame
 	BufferedImage imageQ;
 	BufferedImage imageX;
 	
-
-	
+	SoundLibrary sl = new SoundLibrary();
 	
 
 	
@@ -230,7 +235,7 @@ public class BattleShip extends JFrame
 			}
 			
 			cannon=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/cannon.wav"));
-			explode=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/explode.wav"));
+			Explode=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/explode.wav"));
 			sinking=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/sinking.wav"));
 			splashSound=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/splash.wav"));
 			
@@ -246,6 +251,16 @@ public class BattleShip extends JFrame
 			imageM=ImageIO.read(new File("4Resources/Tiles/M.png"));
 			imageQ=ImageIO.read(new File("4Resources/Tiles/Q.png"));
 			imageX=ImageIO.read(new File("4Resources/Tiles/X.png"));
+		
+			cannonClip = AudioSystem.getClip();
+			cannonClip.open(cannon);
+			ExplodeClip = AudioSystem.getClip();
+			ExplodeClip.open(Explode);
+			sinkingClip = AudioSystem.getClip();
+			sinkingClip.open(sinking);
+			splashClip = AudioSystem.getClip();
+			splashClip.open(BattleShip.this.splashSound);
+			
 		}
 		catch(IOException ioe)
 		{	
@@ -254,6 +269,10 @@ public class BattleShip extends JFrame
 		catch (UnsupportedAudioFileException e)
 		{
 			System.out.println("whatt");
+		} catch (LineUnavailableException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -1465,6 +1484,8 @@ public class BattleShip extends JFrame
 				new Thread(this).start();			
 			}
 		}
+		
+		
 
 		@Override
 		protected void paintComponent(Graphics g) 
@@ -1511,13 +1532,17 @@ public class BattleShip extends JFrame
 			else if(this.c=='X') blastIcon=new ImageIcon(imageX);
 			
 			new Explosion().start();
+			new Sound().start();
 		}
 		
 		public class Explosion extends Thread
 		{
 			public void run() 
 			{
+			    System.out.println("playing sound?");
+
 				counter=0;
+				System.out.println("how many times does run get called?");
 				while(true)
 				{
 					if(c!='M')//we're not idicating a miss
@@ -1537,7 +1562,10 @@ public class BattleShip extends JFrame
 								add(new JLabel(blastIcon));
 								counter++;
 							}
-							else return;//stop thread
+							else
+							{
+								return;//stop thread
+							}
 						}
 						else
 						{
@@ -1567,11 +1595,32 @@ public class BattleShip extends JFrame
 						}
 					}
 					try
-					{sleep(150);} 
+					{sleep(300);} 
 					catch (InterruptedException e)
 					{}
 				}
 		    }
+		}
+		public class Sound extends Thread
+		{
+			String theString;
+			public Sound()
+			{
+				if(c=='M')
+				{
+					theString="splash";
+				}
+				else if(c=='X') theString="explode";
+				
+			}
+			public void run()
+			{
+				if(explode)
+				{
+					sl.playSound("cannon");
+					sl.playSound(theString);
+				}
+			}
 		}
 	}
 	
