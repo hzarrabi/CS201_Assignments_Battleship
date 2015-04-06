@@ -521,17 +521,69 @@ public class BattleShip extends JFrame
 								{
 									String label=Character.toString(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]);
 									((GridLabel)rightGrid[i1][j1]).explode('X', true);
+									char theChar=compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1];
 									compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]='O';
 									compHits++;
 									
-									log.append("You hit a ship!\n");//TODO you have to specify what ship they hit or SANK!!
+									Boolean append=true;
+									
+									String theShip="";
+									if(theChar=='A')
+									{
+										playerCarriers++;
+										theShip="AirCraft";
+										if(playerCarriers==5)
+										{
+											log.append("Player sank an AircraftCarrier!\n");
+											playerCarriers++;
+											append=false;
+										}
+									}
+									else if(theChar=='B')
+									{
+										playerBattlships++;
+										theShip="BattleShip";
+										if(playerBattlships==4)
+										{
+											log.append("Player sank a BattleShip!\n");
+											playerBattlships++;
+											append=false;
+										}
+									}
+									else if(theChar=='C')
+									{
+										playerCruisers++;
+										theShip="Carrier";
+										if(playerCruisers==3)
+										{
+											log.append("Player sank a Cruiser!\n");
+											playerCruisers++;
+											append=false;
+										}
+									}
+									else if(theChar=='D')
+									{
+										playerDestroyers++;
+										theShip="Destroyer";
+										if(playerDestroyers==2)
+										{
+											log.append("Player sank a Carrier!\n");
+											playerDestroyers=0;
+											append=false;
+										}
+									}
+									
+									String theSecond="0:";
+									if(seconds<10)theSecond="0:0";
+									else theSecond="0:";
+									
+									if(append)log.append("Player hit "+getCharForNumber2(j1+1)+i1+" and hit a "+theShip+"!("+theSecond+seconds+")\n");
 									
 									playersAim= getCharForNumber2(((GridLabel)rightGrid[i1][j1]).y)+((GridLabel)rightGrid[i1][j1]).x;
 									if(compHits>=16)
 									{
 										time.stop();
 										new winnerWindow("You");
-										//TODO then we have to stop the clock!!!
 									}
 									else
 									{
@@ -542,6 +594,8 @@ public class BattleShip extends JFrame
 											seconds=15;//reseting the timer
 											timeLabel.setText("0:15");
 											
+											round++;
+											log.append("Round "+round+"\n");
 											int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
 											//within 10 seconds(60% chance)
 											if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
@@ -651,9 +705,66 @@ public class BattleShip extends JFrame
 		if(userGrid[x][y]!='X' && userGrid[x][y]!='O')//if comp hits a target
 		{
 			((GridLabel)leftGrid[x+1][y]).explode('X', true);;
+			char theChar=userGrid[x][y];
 			userGrid[x][y]='O';//marking that computer shot here
 			userHits++;
 			computersAim= getCharForNumber2(y+1)+(x+1);
+			
+			Boolean append=true;
+			
+			String theShip="";
+			if(theChar=='A')
+			{
+				compCarriers++;
+				theShip="AirCraft";
+				if(compCarriers==5)
+				{
+					log.append("Computer sank an AircraftCarrier!\n");
+					compCarriers++;
+					append=false;
+				}
+			}
+			else if(theChar=='B')
+			{
+				compBattlships++;
+				theShip="BattleShip";
+				if(compBattlships==4)
+				{
+					log.append("Computer sank a BattleShip!\n");
+					compBattlships++;
+					append=false;
+				}
+			}
+			else if(theChar=='C')
+			{
+				compCruisers++;
+				theShip="Carrier";
+				if(compCarriers==3)
+				{
+					log.append("Computer sank a Cruiser!\n");
+					compCruisers++;
+					append=false;
+				}
+			}
+			else if(theChar=='D')
+			{
+				compDestroyers++;
+				theShip="Destroyer";
+				if(compDestroyers==2)
+				{
+					log.append("Computer sank a Carrier!\n");
+					compCarriers=0;
+					append=false;
+				}
+			}
+			
+			String theSecond="0:";
+			if(seconds<10)theSecond="0:0";
+			else theSecond="0:";
+			
+			if(append)log.append("Computer hit "+getCharForNumber2(y+1)+x+1+" and hit a "+theShip+"!("+theSecond+seconds+")\n");
+			
+			
 			if(userHits==16)//if the computer has hit all ships
 			{
 				time.stop();
@@ -662,8 +773,6 @@ public class BattleShip extends JFrame
 			else
 			{
 				compShot=true;//player's turn otherwise
-				log.append("Computer hit a ship!\n");//TODO specify what ship hit/SANK
-
 				if(playerShot==true)//if the player has shot too
 				{
 					System.out.println("Player hasn't shot tho");
