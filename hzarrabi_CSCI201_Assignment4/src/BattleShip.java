@@ -78,6 +78,17 @@ public class BattleShip extends JFrame
 	int cruisers=0;
 	int destroyers=0;
 	
+	//ships hit
+	int playerCarriers=0;
+	int playerBattlships=0;
+	int playerCruisers=0;
+	int playerDestroyers=0;
+	
+	int compCarriers=0;
+	int compBattlships=0;
+	int compCruisers=0;
+	int compDestroyers=0;
+	
 	//bools for different modes of game
 	boolean selectedFile=false;
 	boolean editMode=true;
@@ -124,15 +135,6 @@ public class BattleShip extends JFrame
 	BufferedImage expl4;
 	BufferedImage expl5;
 	BufferedImage[] expl = new BufferedImage[5];
-		//--
-	AudioInputStream cannon;
-	AudioInputStream Explode;
-	AudioInputStream sinking;
-	AudioInputStream splashSound;
-	Clip cannonClip;
-	Clip ExplodeClip;
-	Clip sinkingClip;
-	Clip splashClip;
 		//--
 	BufferedImage splash1;
 	BufferedImage splash2;
@@ -234,10 +236,6 @@ public class BattleShip extends JFrame
 				expl[i]=ImageIO.read(new File("4Resources/explosion/expl"+(i+1)+".png"));
 			}
 			
-			cannon=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/cannon.wav"));
-			Explode=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/explode.wav"));
-			sinking=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/sinking.wav"));
-			splashSound=AudioSystem.getAudioInputStream(new File("4Resources/Sounds/splash.wav"));
 			
 			for(int i=0;i<7;i++)
 			{
@@ -252,28 +250,12 @@ public class BattleShip extends JFrame
 			imageQ=ImageIO.read(new File("4Resources/Tiles/Q.png"));
 			imageX=ImageIO.read(new File("4Resources/Tiles/X.png"));
 		
-			cannonClip = AudioSystem.getClip();
-			cannonClip.open(cannon);
-			ExplodeClip = AudioSystem.getClip();
-			ExplodeClip.open(Explode);
-			sinkingClip = AudioSystem.getClip();
-			sinkingClip.open(sinking);
-			splashClip = AudioSystem.getClip();
-			splashClip.open(BattleShip.this.splashSound);
 			
 		}
 		catch(IOException ioe)
 		{	
 			System.out.println("whasdf");
 		} 
-		catch (UnsupportedAudioFileException e)
-		{
-			System.out.println("whatt");
-		} catch (LineUnavailableException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	
@@ -539,7 +521,6 @@ public class BattleShip extends JFrame
 								{
 									String label=Character.toString(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]);
 									((GridLabel)rightGrid[i1][j1]).explode('X', true);
-									//TODO
 									compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]='O';
 									compHits++;
 									
@@ -548,6 +529,7 @@ public class BattleShip extends JFrame
 									playersAim= getCharForNumber2(((GridLabel)rightGrid[i1][j1]).y)+((GridLabel)rightGrid[i1][j1]).x;
 									if(compHits>=16)
 									{
+										time.stop();
 										new winnerWindow("You");
 										//TODO then we have to stop the clock!!!
 									}
@@ -674,8 +656,8 @@ public class BattleShip extends JFrame
 			computersAim= getCharForNumber2(y+1)+(x+1);
 			if(userHits==16)//if the computer has hit all ships
 			{
+				time.stop();
 				new winnerWindow("Computer");
-				//TODO stop clock an reset
 			}
 			else
 			{
@@ -718,7 +700,6 @@ public class BattleShip extends JFrame
 			
 			if(playerShot==true)//if the player has shot too
 			{
-				System.out.println("not supposed to reset");
 				seconds=15;
 				timeLabel.setText("0:15");
 				
@@ -911,6 +892,7 @@ public class BattleShip extends JFrame
 			    scroll.setPreferredSize(new Dimension(690, 150));
 			    south.setBorder(BorderFactory.createTitledBorder("Game Log"));
 				south.add(scroll);
+				south.setVisible(true);
 				
 				log.append("Round 1\n");
 				
@@ -1382,6 +1364,21 @@ public class BattleShip extends JFrame
 			
 			int compHits=0;//so if this equals 16 that means that the USER won
 			int userHits=0;
+			
+			selectFileButton.setVisible(true);
+			startButton.setVisible(true);
+			fileName.setText("File");//delete the text instead of setting invisible because then i only have to reset in new game
+			editMode=true;
+			log.setText("");
+			scroll.setVisible(false);
+			south.setBorder(null);
+			BattleShip.this.setSize(690,460);
+			timeLabel.setText("0:15");
+			seconds=15;
+			playerShot=false;//the boolean that indicates if the player shot
+			compShot=false;
+			computerSeconds=12;//this will be the random time assigned to the computer's turn 
+			round=1;
 			
 			
 			winnerWindow.this.dispose();
