@@ -254,7 +254,6 @@ public class BattleShip extends JFrame
 		}
 		catch(IOException ioe)
 		{	
-			System.out.println("whasdf");
 		} 
 	}
 	
@@ -294,8 +293,6 @@ public class BattleShip extends JFrame
 					  else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
 					  //>25 seconds (20% chance)
 					  else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
-					  System.out.println(randomNum);
-					  System.out.println("the computer will take:"+computerSeconds+" seconds");
 		        	  
 		          }
 		          else
@@ -580,6 +577,7 @@ public class BattleShip extends JFrame
 									if(append)log.append("Player hit "+getCharForNumber2(j1+1)+i1+" and hit a "+theShip+"!("+theSecond+seconds+")\n");
 									
 									playersAim= getCharForNumber2(((GridLabel)rightGrid[i1][j1]).y)+((GridLabel)rightGrid[i1][j1]).x;
+									playerShot=true;
 									if(compHits>=16)
 									{
 										time.stop();
@@ -604,8 +602,6 @@ public class BattleShip extends JFrame
 											//>25 seconds (20% chance)
 											else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
 											//compShooter();//if we haven't won then the computer shoots
-											System.out.println(randomNum);
-											System.out.println("the computer will take:"+computerSeconds+" seconds");
 										
 											compShot=false;
 											playerShot=false;
@@ -618,12 +614,16 @@ public class BattleShip extends JFrame
 									compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]='O';
 										playersAim= getCharForNumber2(((GridLabel)rightGrid[i1][j1]).y)+((GridLabel)rightGrid[i1][j1]).x;
 										
-										log.append("You missed!\n");
+										String theTime="0:";
+										if(seconds<10) theTime="0:0";
+										log.append("You missed!("+theTime+seconds+")\n");
 										
 										playerShot=true;//player shot so make true
 										
 										if(compShot==true)//if computer has already aimed new round
 										{
+											round++;
+											log.append("Round "+round+"\n");
 											seconds=15;//reseting the timer
 											timeLabel.setText("0:15");
 											
@@ -635,8 +635,6 @@ public class BattleShip extends JFrame
 											//>25 seconds (20% chance)
 											else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
 											//compShooter();//if we haven't won then the computer shoots
-											System.out.println(randomNum);
-											System.out.println("the computer will take:"+computerSeconds+" seconds");
 											
 											compShot=false;
 											playerShot=false;
@@ -762,8 +760,8 @@ public class BattleShip extends JFrame
 			if(seconds<10)theSecond="0:0";
 			else theSecond="0:";
 			
-			if(append)log.append("Computer hit "+getCharForNumber2(y+1)+x+1+" and hit a "+theShip+"!("+theSecond+seconds+")\n");
-			
+			if(append)log.append("Computer hit "+getCharForNumber2(y+1)+(x+1)+" and hit a "+theShip+"!("+theSecond+seconds+")\n");
+			compShot=true;
 			
 			if(userHits==16)//if the computer has hit all ships
 			{
@@ -775,7 +773,6 @@ public class BattleShip extends JFrame
 				compShot=true;//player's turn otherwise
 				if(playerShot==true)//if the player has shot too
 				{
-					System.out.println("Player hasn't shot tho");
 					seconds=15;
 					timeLabel.setText("0:15");
 					
@@ -787,8 +784,6 @@ public class BattleShip extends JFrame
 					//>25 seconds (20% chance)
 					else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
 					//compShooter();//if we haven't won then the computer shoots
-					System.out.println(randomNum);
-					System.out.println("the computer will take:"+computerSeconds+" seconds");
 					
 					compShot=false;
 					playerShot=false;
@@ -805,7 +800,10 @@ public class BattleShip extends JFrame
 			((GridLabel)leftGrid[x+1][y]).explode('M',true);
 			computersAim= getCharForNumber2(y+1)+(x+1);
 			compShot=true;
-			log.append("Computer missed!\n");
+			
+			String theTime="0:";
+			if(seconds<10) theTime="0:0";
+			log.append("Computer missed!("+theTime+seconds+")\n");
 			
 			if(playerShot==true)//if the player has shot too
 			{
@@ -820,8 +818,6 @@ public class BattleShip extends JFrame
 				//>25 seconds (20% chance)
 				else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
 				//compShooter();//if we haven't won then the computer shoots
-				System.out.println(randomNum);
-				System.out.println("the computer will take:"+computerSeconds+" seconds");
 				
 				compShot=false;
 				playerShot=false;
@@ -910,7 +906,6 @@ public class BattleShip extends JFrame
 					userGrid[x][y+i]='X';
 					leftGrid[x+1][y+i].removeAll();
 					((GridLabel)leftGrid[x+1][y+i]).add(new JLabel(new ImageIcon(imageQ)));
-					System.out.println("wesdfasdf");
 				}
 			}
 		}
@@ -1356,7 +1351,6 @@ public class BattleShip extends JFrame
 							{
 								userGrid[xTest][y]=shipCharacter;
 								((GridLabel)leftGrid[xTest+1][y]).explode(shipCharacter,false);
-								System.out.println(shipCharacter);
 								xTest--;	
 							}
 					}		
@@ -1645,17 +1639,13 @@ public class BattleShip extends JFrame
 		{
 			public void run() 
 			{
-			    System.out.println("playing sound?");
-
 				counter=0;
-				System.out.println("how many times does run get called?");
 				while(true)
 				{
 					if(c!='M')//we're not idicating a miss
 					{
 						if(explode)//if you want explode animation to happen
 						{
-							System.out.println("whatsdfa");
 							if(counter<5)
 							{
 								removeAll();//removes previous icons or labels
