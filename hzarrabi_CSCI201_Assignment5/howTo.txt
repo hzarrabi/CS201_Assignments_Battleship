@@ -1,0 +1,29 @@
+Each player gets a board with two grids, five ships, 
+and a bunch of hit and miss markers.
+
+Goal: To sink all of your opponent's 
+ships by correctly guessing their location.
+
+Play
+
+Players take turns firing a shot to attack enemy ships.
+
+On your turn, call out a letter and a number of a 
+row and column on the grid. Your opponent checks 
+that space on their lower grid, and says "miss" 
+if there are no ships there, or "hit" if you 
+guessed a space that contained a ship.
+
+Mark your shots on your upper grid, with 
+white pegs for misses and red pegs for 
+hits, to keep track of your guesses.
+
+When one of your ships is hit, put a 
+red peg into that ship on your lower 
+grid at the location of the hit. 
+Whenever one of your ships has every 
+slot filled with red pegs, you must 
+announce to your opponent that he has 
+sunk your ship.
+
+Victory: The first player to sink all opposing ships wins.
