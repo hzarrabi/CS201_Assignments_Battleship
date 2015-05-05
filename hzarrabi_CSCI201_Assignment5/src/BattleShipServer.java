@@ -21,6 +21,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -56,19 +59,20 @@ import javax.swing.Timer;
 
 
 
-public class BattleShipComp extends JFrame
+public class BattleShipServer extends JFrame
 {
 	private JComponent  leftGrid[][]=new JComponent[11][11];
 	private JComponent rightGrid[][]=new JComponent[11][11];
 	private char compGrid[][]=new char[10][10];//this is the one we click on
 	private char userGrid[][]=new char[10][10];//this is the one the computer guesses 
-	private char compFromInter[][]=new char[10][10];//this will hold the char array that the computer will use
 	
 	JPanel left;
 	JPanel right;
 
 	String playersAim="N/A";
 	String computersAim="N/A";
+	JButton selectFileButton=new JButton("Select File...");
+	JLabel fileName=new JLabel("File:                                     ");
 	JButton startButton = new JButton("START");
 	
 	//for the ship placement
@@ -89,6 +93,7 @@ public class BattleShipComp extends JFrame
 	int compDestroyers=0;
 	
 	//bools for different modes of game
+	boolean selectedFile=false;
 	boolean editMode=true;
 	
 	//images
@@ -153,14 +158,18 @@ public class BattleShipComp extends JFrame
 	
 	SoundLibrary sl = new SoundLibrary();
 	
-
+	//-------------------------------------------
+	Socket s;
+	String myName;
+	BufferedReader br;
+	PrintWriter pw;
 	
-	public BattleShipComp(char compCoor[][])
+	public BattleShipServer(Socket s, String name)
 	{
-		load();
+		this.s=s;
+		myName=name;
 		
-		compFromInter=compCoor.clone();
-		compGrid=compCoor.clone();
+		load();
 		
 		fillUserGrid();//this will instantiate userArray with X's
 		
@@ -172,7 +181,7 @@ public class BattleShipComp extends JFrame
 
 		JPanel north=new JPanel(new FlowLayout(FlowLayout.CENTER));
 		north.setAlignmentX(100);
-		north.add(new JLabel("PLAYER                                                  "));
+		north.add(new JLabel(myName+"                                                  "));
 		north.add(timeLabel);
 		north.add(new JLabel("                                             COMPUTER"));
 		add(north,BorderLayout.NORTH);
@@ -193,13 +202,15 @@ public class BattleShipComp extends JFrame
 		JPanel southLeft=new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel southRight=new JPanel(new FlowLayout(FlowLayout.LEFT));
 		
-		System.out.println("this getting called?");
+		southRight.add(selectFileButton);
+		southRight.add(fileName);
 		southRight.add(startButton);
 		startButton.setEnabled(false);
 		
 		south.add(southLeft,BorderLayout.WEST);
 		south.add(southRight,BorderLayout.EAST);
 		add(south,BorderLayout.SOUTH);
+		selectFileListener();
 		startButtonListener();
 		
 		
@@ -983,7 +994,9 @@ public class BattleShipComp extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				selectFileButton.setVisible(false);
 				startButton.setVisible(false);
+				fileName.setText("");//delete the text instead of setting invisible because then i only have to reset in new game
 				editMode=false;
 				
 				timerAction();//timer starts working once we press start
@@ -1001,7 +1014,74 @@ public class BattleShipComp extends JFrame
 		});
 	}
 	
-
+	//action listener for select file
+	private void selectFileListener()
+	{
+		selectFileButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if(e.getSource()==selectFileButton)//if we click that button
+				{
+					JFileChooser fc= new JFileChooser();
+					
+					FileNameExtensionFilter filter = new FileNameExtensionFilter("Battle Files (*.battle)", "battle"); //filter to only allow .battle files
+					fc.setFileFilter(filter);//making our chooser take that filter
+					fc.setAcceptAllFileFilterUsed(false);//will only allow battle files
+					
+					int returnVal=fc.showOpenDialog(selectFileButton);//opens up fileSelector
+					
+					if(returnVal==fc.APPROVE_OPTION)//if we selected a file
+					{
+						selectFileButton.setVisible(false);//removing the select file button
+						
+						//getting the fileName without extenstion to change JLabel
+						String fileName=fc.getSelectedFile().getName();
+						int pos = fileName.lastIndexOf(".");
+						if (pos > 0) {
+						    fileName = fileName.substring(0, pos);
+						}
+						BattleShipServer.this.fileName.setText("File:" + fileName+ "                                     ");
+						
+						//reading the file
+						try
+						{
+							FileReader fr = new FileReader(fc.getSelectedFile());//make a file object for reading
+							BufferedReader br = new BufferedReader(fr); //make a buffer to go line by line
+							
+							//reading in from the buffer
+							for(int j=0;j<10;j++)
+							{
+								String buffer = br.readLine();//reading in line
+								char[] charArray = buffer.toCharArray();//making it into char array
+								for(int i=0;i<10;i++)
+								{
+									compGrid[i][j]=charArray[i];
+								}
+							}
+						} 
+						catch (FileNotFoundException e1)
+						{
+							//we know the file is there so don't worry
+						} 
+						catch (IOException ioe) 
+						{}
+				        
+				        selectedFile=true;
+				        if(carriers+battlships+cruisers+destroyers==5 && selectedFile)//if all ships places and file selected 
+				        {
+				        	startButton.setEnabled(true);
+				        }
+					}
+				}
+				
+			}
+		});
+		
+	}
+	
 	public class shipPlacerWindow extends JDialog
 	{
 		
@@ -1284,7 +1364,7 @@ public class BattleShipComp extends JFrame
 								xTest--;	
 							}
 					}		
-				if(carriers+battlships+cruisers+destroyers==5)//if they chose all ships
+				if(carriers+battlships+cruisers+destroyers==5 && selectedFile)//if they chose all ships
 				{ 
 					startButton.setEnabled(true);
 				}
@@ -1374,14 +1454,14 @@ public class BattleShipComp extends JFrame
 				for(int i=0;i<10;i++)
 				{
 					userGrid[i][j]='X';
-					//compGrid[i][j]='X';
-					//TODO i commented out the above line because the map is coming from online
-					compGrid=compFromInter.clone();
+					compGrid[i][j]='X';
 				}
 			}
 			
 			playersAim="N/A";
 			computersAim="N/A";
+			selectFileButton.setVisible(true);;
+			fileName.setText("File:                                     ");
 			startButton.setEnabled(false);
 			startButton.setVisible(true);
 			
@@ -1392,17 +1472,20 @@ public class BattleShipComp extends JFrame
 			destroyers=0;
 			
 			//bools for different modes of game
+			selectedFile=false;
 			editMode=true;
 			
 			int compHits=0;//so if this equals 16 that means that the USER won
 			int userHits=0;
 			
+			selectFileButton.setVisible(true);
 			startButton.setVisible(true);
+			fileName.setText("File");//delete the text instead of setting invisible because then i only have to reset in new game
 			editMode=true;
 			log.setText("");
 			scroll.setVisible(false);
 			south.setBorder(null);
-			BattleShipComp.this.setSize(690,460);
+			BattleShipServer.this.setSize(690,460);
 			timeLabel.setText("0:15");
 			seconds=15;
 			playerShot=false;//the boolean that indicates if the player shot
@@ -1645,5 +1728,12 @@ public class BattleShipComp extends JFrame
 				}
 			}
 		}
+	}
+	
+	//==============================================================
+	public static void main(String[] args)
+	{
+		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+		new BattleShip();
 	}
 }

@@ -1,5 +1,3 @@
-
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
@@ -14,6 +12,7 @@ import javax.swing.BoxLayout;
 import java.awt.FlowLayout;
 import java.awt.Component;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -39,7 +38,7 @@ import java.awt.event.ActionEvent;
 public class StartMenu extends JFrame
 {
 	private JPanel contentPane;
-	private JTextField YourIPField;
+	private JTextField YourNameField;
 	private JTextField EnterIPField;
 	private JTextField PortField_1;
 	private JTextField MapsField;
@@ -104,8 +103,8 @@ public class StartMenu extends JFrame
 		
 		YourNameLabel = new JLabel("Name:");
 		
-		YourIPField = new JTextField();
-		YourIPField.setColumns(10);
+		YourNameField = new JTextField();
+		YourNameField.setColumns(10);
 		
 		HostGameCheckBox = new JCheckBox("Host Game");
 		HostGameCheckBox.addActionListener(new ActionListener() {
@@ -279,9 +278,27 @@ public class StartMenu extends JFrame
 									s=new Socket(EnterIPField.getText(), Integer.parseInt(PortField_1.getText()));
 									System.out.println("client connected to host!");
 								} 
-								catch (NumberFormatException e){System.out.println("something went wrong with connecting client");} 
-								catch (UnknownHostException e){System.out.println("something went wrong with connecting client");} 
-								catch (IOException e){System.out.println("something went wrong with connecting client");}
+								catch (NumberFormatException e)
+								{
+									JOptionPane.showMessageDialog(null,
+										    "Connection to the host failed!",
+										    "Connection Error",
+										    JOptionPane.ERROR_MESSAGE);
+								} 
+								catch (UnknownHostException e)
+								{
+									JOptionPane.showMessageDialog(null,
+										    "Connection to the host failed!",
+										    "Connection Error",
+										    JOptionPane.ERROR_MESSAGE);
+								} 
+								catch (IOException e)
+								{
+									JOptionPane.showMessageDialog(null,
+										    "Connection to the host failed!",
+										    "Connection Error",
+										    JOptionPane.ERROR_MESSAGE);
+								}
 							}
 						}.start();
 					}
@@ -350,7 +367,7 @@ public class StartMenu extends JFrame
 							.addGap(142)
 							.addComponent(YourNameLabel)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(YourIPField, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
+							.addComponent(YourNameField, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(87)
 							.addComponent(HostGameCheckBox)
@@ -385,7 +402,7 @@ public class StartMenu extends JFrame
 					.addComponent(YourIPLabel)
 					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(YourIPField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(YourNameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(YourNameLabel))
 					.addGap(34)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
@@ -434,7 +451,7 @@ public class StartMenu extends JFrame
 				System.out.println("waiting on someone to connect");
 				s=ss.accept();
 				System.out.println("did this shit connect?");
-				new BattleShip();
+				new BattleShipServer(s,YourNameField.getText());
 			} 
 			catch (IOException e){System.out.println("something wrong with server socket connection!");}
 		}
