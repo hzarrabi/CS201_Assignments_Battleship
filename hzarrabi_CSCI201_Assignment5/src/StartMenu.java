@@ -139,6 +139,22 @@ public class StartMenu extends JFrame
 		PortField_1.setEnabled(false);
 		
 		MapCheckBox = new JCheckBox("201 Maps");
+		MapCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(MapCheckBox.isSelected())
+				{
+					CustomPortCheckBox.setSelected(false);
+					CustomPortCheckBox.setEnabled(false);
+					HostGameCheckBox.setSelected(false);
+					HostGameCheckBox.setEnabled(false);
+				}
+				else
+				{
+						CustomPortCheckBox.setEnabled(true);
+						HostGameCheckBox.setEnabled(true);
+				}
+			}
+		});
 		
 		MapsField = new JTextField();
 		MapsField.setColumns(10);
