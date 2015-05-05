@@ -1,4 +1,4 @@
-package hzarrabi_CSCI201_Assignment3;
+
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -25,9 +25,14 @@ import javax.swing.JButton;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -56,6 +61,14 @@ public class StartMenu extends JFrame
 	
 	JPanel cards;
 	CardLayout cardLayout;
+	
+	ServerSocket ss;//used if we're hosting a game
+	Socket s;//used if we're not hosting but connecting to a host
+	HostServer server; 
+	PrintWriter pr;
+	BufferedReader br;
+	
+	String compCoordinates=new String();
 
 	public static void main(String[] args)
 	{
@@ -185,7 +198,7 @@ public class StartMenu extends JFrame
 		}.start();
 			
 
-		
+		//CONNECT BUTTON LISTENER
 		ConnectButton = new JButton("Connect");
 		ConnectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -193,36 +206,108 @@ public class StartMenu extends JFrame
 				{
 					URL toCheckIp= new URL("http://checkip.amazonaws.com");
 					BufferedReader in = new BufferedReader(new InputStreamReader(toCheckIp.openStream()));
-					cardLayout.last(cards);
-					new Thread()
+					
+					//if you're going to be a host then you must allot 30 seconds to other person to join
+					if(HostGameCheckBox.isSelected() && !MapCheckBox.isSelected())
 					{
-						public void run()
+						cardLayout.last(cards);
+						server = new HostServer();
+						server.start();
+						new Thread()
 						{
-							try
+							public void run()
 							{
-								Thread.sleep(1000);
-							} 
-							catch (InterruptedException e){}
-							while(true)
-							{
-								secondsLeft--;
-								secondsLabel.setText("Waiting for another player... " +secondsLeft+ "s until timout.");
 								try
 								{
 									Thread.sleep(1000);
 								} 
 								catch (InterruptedException e){}
-								secondsLeft--;
-								if(secondsLeft==0)
+								while(true)
 								{
-									cardLayout.first(cards);
-									secondsLeft=30;
+									secondsLeft--;
 									secondsLabel.setText("Waiting for another player... " +secondsLeft+ "s until timout.");
-									break;
+									try
+									{
+										Thread.sleep(1000);
+									} 
+									catch (InterruptedException e){}
+									secondsLeft--;
+									if(secondsLeft==0)
+									{
+										cardLayout.first(cards);
+										secondsLeft=30;
+										secondsLabel.setText("Waiting for another player... " +secondsLeft+ "s until timout.");
+										try
+										{
+											ss.close();
+										} 
+										catch (IOException e){System.out.println("problem with closing the serverSocket");}
+										server.interrupt();
+										break;
+									}
 								}
 							}
-						}
-					}.start();
+						}.start();
+					}
+					
+					//----if you're NOT THE HOST!!-- then connect to the host
+					else if (!HostGameCheckBox.isSelected() && !MapCheckBox.isSelected())
+					{
+						new Thread()
+						{
+							public void run()
+							{
+								System.out.println("trying to connect to server");
+								try
+								{
+									s=new Socket(EnterIPField.getText(), Integer.parseInt(PortField_1.getText()));
+									System.out.println("client connected to host!");
+								} 
+								catch (NumberFormatException e){System.out.println("something went wrong with connecting client");} 
+								catch (UnknownHostException e){System.out.println("something went wrong with connecting client");} 
+								catch (IOException e){System.out.println("something went wrong with connecting client");}
+							}
+						}.start();
+					}
+					//if the maps check is selected
+					else if(MapCheckBox.isSelected())
+					{
+						System.out.println("map is selected");
+						 try {
+					            URL url = new URL("http://www-scf.usc.edu/~csci201/assignments/"+MapsField.getText()+".battle");
+					            InputStream is = url.openStream();
+					            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+					            
+					            
+					            char compCoor[][]=new char[10][10];
+					            int l=0;
+					            String line;
+					            while ( (line = br.readLine()) != null)
+					            {
+					                compCoor[l]=line.toCharArray();
+					                l++;
+					            }
+					            for(int i =0;i<10; i++){
+					                for (int j = 0; j < 10; j++) {//Iterate rows
+					                    System.out.print(compCoor[i][j]);//Print colmns
+					                }   
+					                System.out.println("");
+					            }
+					            
+					            char compCoor1[][]=new char[10][10];
+					            for(int i =0;i<10; i++){
+					                for (int j = 0; j < 10; j++) {//Iterate rows
+					                    compCoor1[j][i]=compCoor[i][j];
+					                }   
+					            }
+					            br.close();
+					            is.close();
+					            new BattleShipComp(compCoor1);
+					            dispose();
+					        } catch (Exception e2) {
+					            e2.printStackTrace();
+					        }  
+					}
 				
 				} 
 				catch (MalformedURLException ex)
@@ -321,5 +406,21 @@ public class StartMenu extends JFrame
 		
 		//=======================================================================================
 		setVisible(true);
+	}
+	
+	public class HostServer extends Thread
+	{
+		public void run()
+		{
+			try
+			{
+				ss=new ServerSocket(Integer.parseInt(PortField_1.getText()));
+				System.out.println("waiting on someone to connect");
+				s=ss.accept();
+				System.out.println("did this shit connect?");
+				new BattleShip();
+			} 
+			catch (IOException e){System.out.println("something wrong with server socket connection!");}
+		}
 	}
 }
