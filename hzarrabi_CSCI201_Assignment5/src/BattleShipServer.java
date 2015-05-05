@@ -25,6 +25,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -186,7 +189,7 @@ public class BattleShipServer extends JFrame
 					System.out.println("Press enter to continue...");
 					Scanner keyboard = new Scanner(System.in);
 					keyboard.nextLine();
-					pw.println("sendingggg text");
+					pw.println("hello:sdfds");
 				}
 			}
 		}.start();
@@ -200,7 +203,7 @@ public class BattleShipServer extends JFrame
 					try
 					{
 						String hello=br.readLine();
-						System.out.println("text read in is "+hello);
+						opponentCommand(hello);
 					} 
 					catch (IOException e){System.out.println("problem with br reading in");}
 					
@@ -272,6 +275,25 @@ public class BattleShipServer extends JFrame
 		setResizable(false);
 		setVisible(true);
 	}	
+	
+	//this takes in commands from opponent through socket and interprets them(protocol)
+	public void opponentCommand(String command)
+	{
+		String[] theCommand = command.split(":");
+		if(theCommand[0].equals("hello")) System.out.println("hello");
+		//receiving opponent's name
+		else if(theCommand[0].equals("name"));
+		//receiving opponents coordinates of where to place ships
+		else if(theCommand[0].equals("placeCoor"));
+		//receiving opponents coordinates of where they attacked
+		else if(theCommand[0].equals("attackCoor"));
+		//reseting the time because we both guessed TODO we may not have to do this because other person guesses we send attack coordinates (and reset)
+		else if(theCommand[0].equals("resetTime"));
+		//resetting game because you won
+		else if(theCommand[0].equals("reset"));
+		
+	}
+	
 	
 	//loads images and sounds etc
 	private void load()

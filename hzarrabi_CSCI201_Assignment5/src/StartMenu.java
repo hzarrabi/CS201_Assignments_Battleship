@@ -278,7 +278,7 @@ public class StartMenu extends JFrame
 									s=new Socket(EnterIPField.getText(), Integer.parseInt(PortField_1.getText()));
 									System.out.println("client connected to host!");
 									new BattleShipServer(s,YourNameField.getText());
-									//TODO close this window
+									dispose();
 								} 
 								catch (NumberFormatException e)
 								{
@@ -454,6 +454,7 @@ public class StartMenu extends JFrame
 				s=ss.accept();
 				System.out.println("did this shit connect?");
 				new BattleShipServer(s,YourNameField.getText());
+				dispose();
 			} 
 			catch (IOException e){System.out.println("something wrong with server socket connection!");}
 		}
