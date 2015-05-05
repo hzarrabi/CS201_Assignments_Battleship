@@ -277,6 +277,8 @@ public class StartMenu extends JFrame
 								{
 									s=new Socket(EnterIPField.getText(), Integer.parseInt(PortField_1.getText()));
 									System.out.println("client connected to host!");
+									new BattleShipServer(s,YourNameField.getText());
+									//TODO close this window
 								} 
 								catch (NumberFormatException e)
 								{

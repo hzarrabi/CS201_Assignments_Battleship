@@ -21,10 +21,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
@@ -168,6 +170,44 @@ public class BattleShipServer extends JFrame
 	{
 		this.s=s;
 		myName=name;
+		try
+		{
+			br=new BufferedReader(new InputStreamReader(this.s.getInputStream()));
+			pw = new PrintWriter(this.s.getOutputStream(), true);
+		} 
+		catch (IOException e){System.out.println("something wrong with instantiating br");}
+		
+		new Thread()
+		{
+			public void run()
+			{
+				while(true)
+				{
+					System.out.println("Press enter to continue...");
+					Scanner keyboard = new Scanner(System.in);
+					keyboard.nextLine();
+					pw.println("sendingggg text");
+				}
+			}
+		}.start();
+		
+		new Thread()
+		{
+			public void run()
+			{
+				while(true)
+				{
+					try
+					{
+						String hello=br.readLine();
+						System.out.println("text read in is "+hello);
+					} 
+					catch (IOException e){System.out.println("problem with br reading in");}
+					
+				}
+			}
+		}.start();
+		
 		
 		load();
 		
