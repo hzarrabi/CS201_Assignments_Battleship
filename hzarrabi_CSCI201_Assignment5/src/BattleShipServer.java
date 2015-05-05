@@ -353,7 +353,7 @@ public class BattleShipServer extends JFrame
 		else if(theCommand[0].equals("resetTime"));
 		//resetting game because you won
 		else if(theCommand[0].equals("reset"));
-		else if(theCommand[0].equals("start")) startButton.setEnabled(true);
+		else if(theCommand[0].equals("start")) startFunction();
 	}
 	
 	//this function takes in the opponent's attack coordinates and changes our left grid
@@ -1283,25 +1283,29 @@ public class BattleShipServer extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				pw.println("start");
-				selectFileButton.setVisible(false);
-				startButton.setVisible(false);
-				fileName.setText("");//delete the text instead of setting invisible because then i only have to reset in new game
-				editMode=false;
-				
-				timerAction();//timer starts working once we press start
-				setSize(690,600);//changing the size of the frame for the log
-				log.setLineWrap(true);
-			    log.setWrapStyleWord(true);
-			    scroll.setPreferredSize(new Dimension(690, 150));
-			    south.setBorder(BorderFactory.createTitledBorder("Game Log"));
-				south.add(scroll);
-				south.setVisible(true);
-				
-				log.append("Round 1\n");
-				
+				startFunction();
 			}
 		});
+	}
+	
+	public void startFunction()
+	{
+		pw.println("start");
+		selectFileButton.setVisible(false);
+		startButton.setVisible(false);
+		fileName.setText("");//delete the text instead of setting invisible because then i only have to reset in new game
+		editMode=false;
+		
+		timerAction();//timer starts working once we press start
+		setSize(690,600);//changing the size of the frame for the log
+		log.setLineWrap(true);
+	    log.setWrapStyleWord(true);
+	    scroll.setPreferredSize(new Dimension(690, 150));
+	    south.setBorder(BorderFactory.createTitledBorder("Game Log"));
+		south.add(scroll);
+		south.setVisible(true);
+		
+		log.append("Round 1\n");
 	}
 	
 	//action listener for select file
