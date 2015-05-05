@@ -168,11 +168,13 @@ public class BattleShipServer extends JFrame
 	String myName;
 	BufferedReader br;
 	PrintWriter pw;
+	int opponentShips;
 	
 	public BattleShipServer(Socket s, String name)
 	{
 		this.s=s;
 		myName=name;
+		opponentShips=0;
 		try
 		{
 			br=new BufferedReader(new InputStreamReader(this.s.getInputStream()));
@@ -284,7 +286,62 @@ public class BattleShipServer extends JFrame
 		//receiving opponent's name
 		else if(theCommand[0].equals("name"));
 		//receiving opponents coordinates of where to place ships
-		else if(theCommand[0].equals("placeCoor"));
+		else if(theCommand[0].equals("placeCoor"))
+		{
+			System.out.println(theCommand[1]);
+			System.out.println("The length of the string is: "+theCommand[1].length());
+			char tempArray[][]= new char[10][10];
+			//trying to turn string back into char array
+			for(int i=0;i<10;i++)
+			{
+				String upToNCharacters =theCommand[1].substring(i*10,(i*10)+10);
+				System.out.println("the row is:"+ upToNCharacters);
+				tempArray[i]=upToNCharacters.toCharArray();
+			}
+			System.out.println("pringing char array");
+			for(int i =0;i<10; i++){
+                for (int j = 0; j < 10; j++) {//Iterate rows
+                    System.out.print(tempArray[i][j]);//Print colmns
+                }   
+                System.out.println("");
+			}
+			
+			//copying the opponents grid to compGrid
+			compGrid=tempArray.clone();
+			opponentShips++;//this counts how many ships the opponent has placed down
+			//if both players have placed all their ships
+			if(opponentShips==5 && carriers+battlships+cruisers+destroyers==5)
+			{
+				startButton.setEnabled(true);
+			}
+		}
+		//opponent removed coordinates
+		else if(theCommand[0].equals("removeCoor"))
+		{
+			System.out.println(theCommand[1]);
+			System.out.println("The length of the string is: "+theCommand[1].length());
+			char tempArray[][]= new char[10][10];
+			//trying to turn string back into char array
+			for(int i=0;i<10;i++)
+			{
+				String upToNCharacters =theCommand[1].substring(i*10,(i*10)+10);
+				System.out.println("the row is:"+ upToNCharacters);
+				tempArray[i]=upToNCharacters.toCharArray();
+			}
+			System.out.println("pringing char array");
+			for(int i =0;i<10; i++){
+                for (int j = 0; j < 10; j++) {//Iterate rows
+                    System.out.print(tempArray[i][j]);//Print colmns
+                }   
+                System.out.println("");
+			}
+			
+			//copying the opponents grid to compGrid
+			compGrid=tempArray.clone();
+			opponentShips--;//this counts how many ships the opponent has placed down
+			//disabling start button in case it was enabled 
+			startButton.setEnabled(false);
+		}
 		//receiving opponents coordinates of where they attacked
 		else if(theCommand[0].equals("attackCoor"));
 		//reseting the time because we both guessed TODO we may not have to do this because other person guesses we send attack coordinates (and reset)
@@ -1045,6 +1102,25 @@ public class BattleShipServer extends JFrame
 			}
 		}
 		
+		//sending new grid with removed ship to opponent
+		StringBuilder builder = new StringBuilder();
+	    for(int i = 0; i < 10; i++)
+	    {
+	        for(int j = 0; j <10; j++)
+	        {
+	            builder.append(userGrid[i][j]);
+	        }
+	    }    
+	    System.out.println(builder.toString());
+		
+	    for(int i =0;i<10; i++){
+            for (int j = 0; j < 10; j++) {//Iterate rows
+                System.out.print(userGrid[i][j]);
+            }   
+            System.out.println("");
+        }
+		pw.println("removeCoor:"+builder.toString());
+				
 		startButton.setEnabled(false);//if you delete a ship you can't start so disabling the button
 	}
 	
@@ -1430,6 +1506,25 @@ public class BattleShipServer extends JFrame
 				{ 
 					startButton.setEnabled(true);
 				}
+				
+				//TODO send new coordinates to the other side
+				StringBuilder builder = new StringBuilder();
+			    for(int i = 0; i < 10; i++)
+			    {
+			        for(int j = 0; j <10; j++)
+			        {
+			            builder.append(userGrid[i][j]);
+			        }
+			    }    
+			    System.out.println(builder.toString());
+				
+			    for(int i =0;i<10; i++){
+	                for (int j = 0; j < 10; j++) {//Iterate rows
+	                    System.out.print(userGrid[i][j]);
+	                }   
+	                System.out.println("");
+	            }
+				pw.println("placeCoor:"+builder.toString());
 				
 				shipPlacerWindow.this.dispose();//closes shipplacer window after you you place a ship
 				}
