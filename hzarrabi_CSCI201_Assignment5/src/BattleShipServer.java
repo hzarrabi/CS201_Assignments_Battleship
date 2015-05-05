@@ -1284,13 +1284,13 @@ public class BattleShipServer extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				startFunction();
+				pw.println("start");
 			}
 		});
 	}
 	
 	public void startFunction()
 	{
-		pw.println("start");
 		selectFileButton.setVisible(false);
 		startButton.setVisible(false);
 		fileName.setText("");//delete the text instead of setting invisible because then i only have to reset in new game
