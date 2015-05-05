@@ -343,12 +343,159 @@ public class BattleShipServer extends JFrame
 			startButton.setEnabled(false);
 		}
 		//receiving opponents coordinates of where they attacked
-		else if(theCommand[0].equals("attackCoor"));
+		else if(theCommand[0].equals("attackCoor"))
+		{
+			int i=Integer.parseInt(theCommand[1]);	
+			int j=Integer.parseInt(theCommand[2]);
+			opponentAttack(i, j);
+		}
 		//reseting the time because we both guessed TODO we may not have to do this because other person guesses we send attack coordinates (and reset)
 		else if(theCommand[0].equals("resetTime"));
 		//resetting game because you won
 		else if(theCommand[0].equals("reset"));
-		
+		else if(theCommand[0].equals("start")) startButton.setEnabled(true);
+	}
+	
+	//this function takes in the opponent's attack coordinates and changes our left grid
+	public void opponentAttack(int i1, int j1)
+	{
+		if(editMode==true || playerShot==true)
+		{
+			System.out.println("the i is: "+i1);
+			System.out.println("the j is: "+j1);
+			
+			//do nothing to the right grid in edit mode or not the players turn!!
+		}
+		else//when we're in playing mode then we want to play!!!!
+		{
+			if(compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]!='X' && compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]!='O')//you hit a ship!!
+			{
+				String label=Character.toString(compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]);
+				((GridLabel)leftGrid[i1][j1]).explode('X', true);
+				char theChar=compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1];
+				compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]='O';
+				compHits++;
+				
+				Boolean append=true;
+				
+				String theShip="";
+				if(theChar=='A')
+				{
+					playerCarriers++;
+					theShip="AirCraft";
+					if(playerCarriers==5)
+					{
+						log.append("Player sank an AircraftCarrier!\n");
+						playerCarriers++;
+						append=false;
+					}
+				}
+				else if(theChar=='B')
+				{
+					playerBattlships++;
+					theShip="BattleShip";
+					if(playerBattlships==4)
+					{
+						log.append("Player sank a BattleShip!\n");
+						playerBattlships++;
+						append=false;
+					}
+				}
+				else if(theChar=='C')
+				{
+					playerCruisers++;
+					theShip="Carrier";
+					if(playerCruisers==3)
+					{
+						log.append("Player sank a Cruiser!\n");
+						playerCruisers++;
+						append=false;
+					}
+				}
+				else if(theChar=='D')
+				{
+					playerDestroyers++;
+					theShip="Destroyer";
+					if(playerDestroyers==2)
+					{
+						log.append("Player sank a Carrier!\n");
+						playerDestroyers=0;
+						append=false;
+					}
+				}
+				
+				String theSecond="0:";
+				if(seconds<10)theSecond="0:0";
+				else theSecond="0:";
+				
+				if(append)log.append("Player hit "+getCharForNumber2(j1+1)+i1+" and hit a "+theShip+"!("+theSecond+seconds+")\n");
+				
+				playersAim= getCharForNumber2(((GridLabel)leftGrid[i1][j1]).y)+((GridLabel)leftGrid[i1][j1]).x;
+				playerShot=true;
+				if(compHits>=16)
+				{
+					time.stop();
+					new winnerWindow("You");
+				}
+				else
+				{
+					playerShot=true;//making it the computer's turn now, player clicks disabled
+				
+					if(compShot==true)//if computer has already aimed new round
+					{
+						seconds=15;//reseting the timer
+						timeLabel.setText("0:15");
+						
+						round++;
+						log.append("Round "+round+"\n");
+						int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
+						//within 10 seconds(60% chance)
+						if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
+						//11-25 seconds(30% chance)
+						else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
+						//>25 seconds (20% chance)
+						else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
+						//compShooter();//if we haven't won then the computer shoots
+					
+						compShot=false;
+						playerShot=false;
+					}
+				}
+			}
+			else if(compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]=='X')//you did miss
+			{
+				((GridLabel)leftGrid[i1][j1]).explode('M', true);
+				compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]='O';
+					playersAim= getCharForNumber2(((GridLabel)leftGrid[i1][j1]).y)+((GridLabel)leftGrid[i1][j1]).x;
+					
+					String theTime="0:";
+					if(seconds<10) theTime="0:0";
+					log.append("You missed!("+theTime+seconds+")\n");
+					
+					playerShot=true;//player shot so make true
+					
+					if(compShot==true)//if computer has already aimed new round
+					{
+						round++;
+						log.append("Round "+round+"\n");
+						seconds=15;//reseting the timer
+						timeLabel.setText("0:15");
+						
+						int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
+						//within 10 seconds(60% chance)
+						if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
+						//11-25 seconds(30% chance)
+						else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
+						//>25 seconds (20% chance)
+						else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
+						//compShooter();//if we haven't won then the computer shoots
+						
+						compShot=false;
+						playerShot=false;
+					}
+			}
+			else log.append("You've already aimed here! Aim again!\n");
+		}
 	}
 	
 	
@@ -639,6 +786,9 @@ public class BattleShipServer extends JFrame
 						{
 							if(editMode==true || playerShot==true)
 							{
+								System.out.println("the i is: "+i1);
+								System.out.println("the j is: "+j1);
+								
 								//do nothing to the right grid in edit mode or not the players turn!!
 							}
 							else//when we're in playing mode then we want to play!!!!
@@ -770,6 +920,7 @@ public class BattleShipServer extends JFrame
 										}
 								}
 								else log.append("You've already aimed here! Aim again!\n");
+								pw.println("attackCoor:"+i1+":"+j1);
 							}
 						}
 					}
@@ -1132,6 +1283,7 @@ public class BattleShipServer extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				pw.println("start");
 				selectFileButton.setVisible(false);
 				startButton.setVisible(false);
 				fileName.setText("");//delete the text instead of setting invisible because then i only have to reset in new game
