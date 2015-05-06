@@ -57,6 +57,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.html.BlockView;
@@ -131,6 +132,7 @@ public class BattleShipServer extends JFrame
 	JTextArea log =new JTextArea();
 	JScrollPane scroll = new JScrollPane (log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	JPanel south=new JPanel(new BorderLayout());//holds buttons to  file and start
+	
 	int round=1;
 	
 	//animations
@@ -169,12 +171,17 @@ public class BattleShipServer extends JFrame
 	BufferedReader br;
 	PrintWriter pw;
 	int opponentShips;
+	JTextField chatField;
+	JButton sendButton;
 	
 	public BattleShipServer(Socket s, String name)
 	{
+		south.setLayout(new BoxLayout(south,BoxLayout.Y_AXIS));
 		this.s=s;
 		myName=name;
 		opponentShips=0;
+		chatField=new JTextField();
+		sendButton=new JButton();
 		try
 		{
 			br=new BufferedReader(new InputStreamReader(this.s.getInputStream()));
@@ -182,19 +189,6 @@ public class BattleShipServer extends JFrame
 		} 
 		catch (IOException e){System.out.println("something wrong with instantiating br");}
 		
-		new Thread()
-		{
-			public void run()
-			{
-				while(true)
-				{
-					System.out.println("Press enter to continue...");
-					Scanner keyboard = new Scanner(System.in);
-					keyboard.nextLine();
-					pw.println("hello:sdfds");
-				}
-			}
-		}.start();
 		
 		new Thread()
 		{
@@ -449,14 +443,6 @@ public class BattleShipServer extends JFrame
 						
 						round++;
 						log.append("Round "+round+"\n");
-						int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
-						//within 10 seconds(60% chance)
-						if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
-						//11-25 seconds(30% chance)
-						else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
-						//>25 seconds (20% chance)
-						else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
-						//compShooter();//if we haven't won then the computer shoots
 					
 						compShot=false;
 						playerShot=false;
@@ -482,14 +468,6 @@ public class BattleShipServer extends JFrame
 						seconds=15;//reseting the timer
 						timeLabel.setText("0:15");
 						
-						int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
-						//within 10 seconds(60% chance)
-						if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
-						//11-25 seconds(30% chance)
-						else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
-						//>25 seconds (20% chance)
-						else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
-						//compShooter();//if we haven't won then the computer shoots
 						
 						compShot=false;
 						playerShot=false;
@@ -571,16 +549,6 @@ public class BattleShipServer extends JFrame
 					  //>25 seconds (20% chance)
 					  else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
 		        	  
-		          }
-		          else
-		          {
-		        	  //when computer "decides" to make turn
-		        	  if(compShot==false && computerSeconds==seconds)
-		        	  {
-		        		  compShooter();
-		        	  }
-		        	  
-
 		          }
 		      }
 		  };
@@ -882,7 +850,6 @@ public class BattleShipServer extends JFrame
 											else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
 											//>25 seconds (20% chance)
 											else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
-											//compShooter();//if we haven't won then the computer shoots
 										
 											compShot=false;
 											playerShot=false;
@@ -907,15 +874,6 @@ public class BattleShipServer extends JFrame
 											log.append("Round "+round+"\n");
 											seconds=15;//reseting the timer
 											timeLabel.setText("0:15");
-											
-											int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
-											//within 10 seconds(60% chance)
-											if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
-											//11-25 seconds(30% chance)
-											else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
-											//>25 seconds (20% chance)
-											else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
-											//compShooter();//if we haven't won then the computer shoots
 											
 											compShot=false;
 											playerShot=false;
@@ -974,145 +932,6 @@ public class BattleShipServer extends JFrame
 		}
 	}
 	
-	
-	//this is the function for the computer guessing coordinates
-	private void compShooter()
-	{/*
-		Random rand=new Random();
-		int x=rand.nextInt(9 - 0 + 1) + 0;
-		int y=rand.nextInt(9 - 0 + 1) + 0;
-		
-		if(userGrid[x][y]!='X' && userGrid[x][y]!='O')//if comp hits a target
-		{
-			((GridLabel)leftGrid[x+1][y]).explode('X', true);;
-			char theChar=userGrid[x][y];
-			userGrid[x][y]='O';//marking that computer shot here
-			userHits++;
-			computersAim= getCharForNumber2(y+1)+(x+1);
-			
-			Boolean append=true;
-			
-			String theShip="";
-			if(theChar=='A')
-			{
-				compCarriers++;
-				theShip="AirCraft";
-				if(compCarriers==5)
-				{
-					log.append("Computer sank an AircraftCarrier!\n");
-					compCarriers++;
-					append=false;
-				}
-			}
-			else if(theChar=='B')
-			{
-				compBattlships++;
-				theShip="BattleShip";
-				if(compBattlships==4)
-				{
-					log.append("Computer sank a BattleShip!\n");
-					compBattlships++;
-					append=false;
-				}
-			}
-			else if(theChar=='C')
-			{
-				compCruisers++;
-				theShip="Carrier";
-				if(compCarriers==3)
-				{
-					log.append("Computer sank a Cruiser!\n");
-					compCruisers++;
-					append=false;
-				}
-			}
-			else if(theChar=='D')
-			{
-				compDestroyers++;
-				theShip="Destroyer";
-				if(compDestroyers==2)
-				{
-					log.append("Computer sank a Carrier!\n");
-					compCarriers=0;
-					append=false;
-				}
-			}
-			
-			String theSecond="0:";
-			if(seconds<10)theSecond="0:0";
-			else theSecond="0:";
-			
-			if(append)log.append("Computer hit "+getCharForNumber2(y+1)+(x+1)+" and hit a "+theShip+"!("+theSecond+seconds+")\n");
-			compShot=true;
-			
-			if(userHits==16)//if the computer has hit all ships
-			{
-				time.stop();
-				new winnerWindow("Computer");
-			}
-			else
-			{
-				compShot=true;//player's turn otherwise
-				if(playerShot==true)//if the player has shot too
-				{
-					seconds=15;
-					timeLabel.setText("0:15");
-					
-					int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
-					//within 10 seconds(60% chance)
-					if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
-					//11-25 seconds(30% chance)
-					else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
-					//>25 seconds (20% chance)
-					else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
-					//compShooter();//if we haven't won then the computer shoots
-					
-					compShot=false;
-					playerShot=false;
-					
-					round++;
-					log.append("Round "+ round +"\n");
-				}
-			}
-			
-		}
-		else if(userGrid[x][y]=='X')//if the computer misses
-		{
-			userGrid[x][y]='O';
-			((GridLabel)leftGrid[x+1][y]).explode('M',true);
-			computersAim= getCharForNumber2(y+1)+(x+1);
-			compShot=true;
-			
-			String theTime="0:";
-			if(seconds<10) theTime="0:0";
-			log.append("Computer missed!("+theTime+seconds+")\n");
-			
-			if(playerShot==true)//if the player has shot too
-			{
-				seconds=15;
-				timeLabel.setText("0:15");
-				
-				int randomNum = new Random().nextInt((10 - 0) + 1) + 0;
-				//within 10 seconds(60% chance)
-				if(randomNum>=4)computerSeconds=new Random().nextInt((14 - 8) + 1) + 8;//15-8 seconds
-				//11-25 seconds(30% chance)
-				else if(randomNum<4 && randomNum>=1)computerSeconds=new Random().nextInt((7 - 0) + 1) + 0;
-				//>25 seconds (20% chance)
-				else computerSeconds=-1;//since comp will run out of time under this case we make it 26 
-				//compShooter();//if we haven't won then the computer shoots
-				
-				compShot=false;
-				playerShot=false;
-				
-				round++;
-				log.append("Round "+ round +"\n");
-			}
-		}
-		else//computer hit's something already hit
-		{
-			compShooter();
-		}
-	*/}
 	//ship deleter
 	private void shipDeleter(int x, int y)
 	{
@@ -1299,12 +1118,13 @@ public class BattleShipServer extends JFrame
 		editMode=false;
 		
 		timerAction();//timer starts working once we press start
-		setSize(690,600);//changing the size of the frame for the log
+		setSize(750,600);//changing the size of the frame for the log
 		log.setLineWrap(true);
 	    log.setWrapStyleWord(true);
 	    scroll.setPreferredSize(new Dimension(690, 150));
 	    south.setBorder(BorderFactory.createTitledBorder("Game Log"));
 		south.add(scroll);
+		south.add(chatField);
 		south.setVisible(true);
 		
 		log.append("Round 1\n");
