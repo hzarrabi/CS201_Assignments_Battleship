@@ -15,6 +15,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,6 +56,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -207,7 +211,16 @@ public class BattleShipServer extends JFrame
 						String hello=br.readLine();
 						opponentCommand(hello);
 					} 
-					catch (IOException e){System.out.println("problem with br reading in");}
+					catch (IOException e)
+					{
+						int PromptResult = JOptionPane.showOptionDialog(null, 
+						 "The other player has quit!", "Connection Error",JOptionPane.DEFAULT_OPTION,  JOptionPane.ERROR_MESSAGE, null, null, null);
+					    if(PromptResult==0)
+					    {
+					      System.exit(0);          
+					    }
+						break;
+					}
 					
 				}
 			}
@@ -286,7 +299,7 @@ public class BattleShipServer extends JFrame
 		//receiving opponent's name
 		else if(theCommand[0].equals("name"))
 		{
-			oppName=theCommand[1];
+			if(theCommand[1]!=null)oppName=theCommand[1];
 			oppLabel.setText("                                             "+oppName);
 		}
 		else if(theCommand[0].equals("placeCoor"))
@@ -361,6 +374,17 @@ public class BattleShipServer extends JFrame
 		//resetting game because you won
 		else if(theCommand[0].equals("reset"));
 		else if(theCommand[0].equals("start")) startFunction();
+		else if(theCommand[0].equals("quit"))
+		{
+			System.out.println("someone quit");
+			int PromptResult = JOptionPane.showOptionDialog(null, 
+			 "The other player has quit!", "Connection Error",JOptionPane.DEFAULT_OPTION,  JOptionPane.ERROR_MESSAGE, null, null, null);
+		    if(PromptResult==0)
+		    {
+		      System.exit(0);          
+		    }
+		    else System.out.println("whattt");
+		}
 	}
 	
 	//this function takes in the opponent's attack coordinates and changes our left grid
@@ -573,6 +597,17 @@ public class BattleShipServer extends JFrame
 	//action listeners for the menus
 	private void menuListeners()
 	{
+		/*addWindowListener(new WindowAdapter()
+		{
+			public void notDefaultClose(ActionEvent e)
+			{
+				pw.println("quit:");
+				System.out.println("someone just quit");
+				dispose();
+			}
+		});*/
+		
+		
 		sendButton.addActionListener(new ActionListener()
 		{
 			

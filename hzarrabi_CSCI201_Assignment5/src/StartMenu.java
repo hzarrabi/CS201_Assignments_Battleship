@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -452,6 +453,7 @@ public class StartMenu extends JFrame
 				ss=new ServerSocket(Integer.parseInt(PortField_1.getText()));
 				System.out.println("waiting on someone to connect");
 				s=ss.accept();
+				ss.close();
 				System.out.println("did this shit connect?");
 				new BattleShipServer(s,YourNameField.getText());
 				dispose();
