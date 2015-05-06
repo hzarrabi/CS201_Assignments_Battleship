@@ -347,6 +347,7 @@ public class BattleShipServer extends JFrame
 		{
 			int i=Integer.parseInt(theCommand[1]);	
 			int j=Integer.parseInt(theCommand[2]);
+			
 			opponentAttack(i, j);
 		}
 		//reseting the time because we both guessed TODO we may not have to do this because other person guesses we send attack coordinates (and reset)
@@ -359,7 +360,7 @@ public class BattleShipServer extends JFrame
 	//this function takes in the opponent's attack coordinates and changes our left grid
 	public void opponentAttack(int i1, int j1)
 	{
-		if(editMode==true || playerShot==true)
+		if(editMode==true || compShot==true)
 		{
 			System.out.println("the i is: "+i1);
 			System.out.println("the j is: "+j1);
@@ -368,12 +369,12 @@ public class BattleShipServer extends JFrame
 		}
 		else//when we're in playing mode then we want to play!!!!
 		{
-			if(compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]!='X' && compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]!='O')//you hit a ship!!
+			if(userGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]!='X' && userGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]!='O')//you hit a ship!!
 			{
 				String label=Character.toString(compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]);
 				((GridLabel)leftGrid[i1][j1]).explode('X', true);
-				char theChar=compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1];
-				compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]='O';
+				char theChar=userGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1];
+				userGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]='O';
 				compHits++;
 				
 				Boolean append=true;
@@ -441,7 +442,7 @@ public class BattleShipServer extends JFrame
 				{
 					playerShot=true;//making it the computer's turn now, player clicks disabled
 				
-					if(compShot==true)//if computer has already aimed new round
+					if(playerShot==true)//if computer has already aimed new round
 					{
 						seconds=15;//reseting the timer
 						timeLabel.setText("0:15");
@@ -462,10 +463,10 @@ public class BattleShipServer extends JFrame
 					}
 				}
 			}
-			else if(compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]=='X')//you did miss
+			else if(userGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]=='X')//you did miss
 			{
 				((GridLabel)leftGrid[i1][j1]).explode('M', true);
-				compGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]='O';
+				userGrid[((GridLabel)leftGrid[i1][j1]).x-1][((GridLabel)leftGrid[i1][j1]).y-1]='O';
 					playersAim= getCharForNumber2(((GridLabel)leftGrid[i1][j1]).y)+((GridLabel)leftGrid[i1][j1]).x;
 					
 					String theTime="0:";
@@ -795,6 +796,7 @@ public class BattleShipServer extends JFrame
 							{
 								if(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]!='X' && compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]!='O')//you hit a ship!!
 								{
+									
 									String label=Character.toString(compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1]);
 									((GridLabel)rightGrid[i1][j1]).explode('X', true);
 									char theChar=compGrid[((GridLabel)rightGrid[i1][j1]).x-1][((GridLabel)rightGrid[i1][j1]).y-1];
@@ -975,7 +977,7 @@ public class BattleShipServer extends JFrame
 	
 	//this is the function for the computer guessing coordinates
 	private void compShooter()
-	{
+	{/*
 		Random rand=new Random();
 		int x=rand.nextInt(9 - 0 + 1) + 0;
 		int y=rand.nextInt(9 - 0 + 1) + 0;
@@ -1110,7 +1112,7 @@ public class BattleShipServer extends JFrame
 		{
 			compShooter();
 		}
-	}
+	*/}
 	//ship deleter
 	private void shipDeleter(int x, int y)
 	{
