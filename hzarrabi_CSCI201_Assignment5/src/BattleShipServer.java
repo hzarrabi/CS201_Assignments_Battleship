@@ -181,7 +181,8 @@ public class BattleShipServer extends JFrame
 		myName=name;
 		opponentShips=0;
 		chatField=new JTextField();
-		sendButton=new JButton();
+		chatField.setColumns(60);
+		sendButton=new JButton("Send");
 		try
 		{
 			br=new BufferedReader(new InputStreamReader(this.s.getInputStream()));
@@ -1118,13 +1119,16 @@ public class BattleShipServer extends JFrame
 		editMode=false;
 		
 		timerAction();//timer starts working once we press start
-		setSize(750,600);//changing the size of the frame for the log
+		setSize(770,600);//changing the size of the frame for the log
 		log.setLineWrap(true);
 	    log.setWrapStyleWord(true);
 	    scroll.setPreferredSize(new Dimension(690, 150));
 	    south.setBorder(BorderFactory.createTitledBorder("Game Log"));
 		south.add(scroll);
-		south.add(chatField);
+		JPanel chatPanel=new JPanel();
+		chatPanel.add(chatField);
+		chatPanel.add(sendButton);
+		south.add(chatPanel);
 		south.setVisible(true);
 		
 		log.append("Round 1\n");
