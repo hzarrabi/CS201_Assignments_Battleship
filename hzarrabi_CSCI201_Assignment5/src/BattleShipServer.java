@@ -173,6 +173,8 @@ public class BattleShipServer extends JFrame
 	int opponentShips;
 	JTextField chatField;
 	JButton sendButton;
+	String oppName="Computer";
+	JLabel oppLabel= new JLabel("                                             COMPUTER");
 	
 	public BattleShipServer(Socket s, String name)
 	{
@@ -187,6 +189,9 @@ public class BattleShipServer extends JFrame
 		{
 			br=new BufferedReader(new InputStreamReader(this.s.getInputStream()));
 			pw = new PrintWriter(this.s.getOutputStream(), true);
+			
+			pw.println("name:"+name);
+			
 		} 
 		catch (IOException e){System.out.println("something wrong with instantiating br");}
 		
@@ -223,7 +228,7 @@ public class BattleShipServer extends JFrame
 		north.setAlignmentX(100);
 		north.add(new JLabel(myName+"                                                  "));
 		north.add(timeLabel);
-		north.add(new JLabel("                                             COMPUTER"));
+		north.add(oppLabel);
 		add(north,BorderLayout.NORTH);
 		
 		JPanel center=new JPanel(new FlowLayout());//center holds the left and right grids
@@ -279,8 +284,11 @@ public class BattleShipServer extends JFrame
 		String[] theCommand = command.split(":");
 		if(theCommand[0].equals("hello")) System.out.println("hello");
 		//receiving opponent's name
-		else if(theCommand[0].equals("name"));
-		//receiving opponents coordinates of where to place ships
+		else if(theCommand[0].equals("name"))
+		{
+			oppName=theCommand[1];
+			oppLabel.setText("                                             "+oppName);
+		}
 		else if(theCommand[0].equals("placeCoor"))
 		{
 			System.out.println(theCommand[1]);
