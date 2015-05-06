@@ -432,7 +432,7 @@ public class BattleShipServer extends JFrame
 				if(append)log.append("Player hit "+getCharForNumber2(j1+1)+i1+" and hit a "+theShip+"!("+theSecond+seconds+")\n");
 				
 				playersAim= getCharForNumber2(((GridLabel)leftGrid[i1][j1]).y)+((GridLabel)leftGrid[i1][j1]).x;
-				playerShot=true;
+				compShot=true;
 				if(compHits>=16)
 				{
 					time.stop();
@@ -440,7 +440,7 @@ public class BattleShipServer extends JFrame
 				}
 				else
 				{
-					playerShot=true;//making it the computer's turn now, player clicks disabled
+					compShot=true;//making it the computer's turn now, player clicks disabled
 				
 					if(playerShot==true)//if computer has already aimed new round
 					{
@@ -473,9 +473,9 @@ public class BattleShipServer extends JFrame
 					if(seconds<10) theTime="0:0";
 					log.append("You missed!("+theTime+seconds+")\n");
 					
-					playerShot=true;//player shot so make true
+					compShot=true;//player shot so make true
 					
-					if(compShot==true)//if computer has already aimed new round
+					if(playerShot==true)//if computer has already aimed new round
 					{
 						round++;
 						log.append("Round "+round+"\n");
@@ -1660,7 +1660,7 @@ public class BattleShipServer extends JFrame
 								xTest--;	
 							}
 					}		
-				if(carriers+battlships+cruisers+destroyers==5 && selectedFile)//if they chose all ships
+				if(carriers+battlships+cruisers+destroyers==5 && opponentShips==5)//if they chose all ships
 				{ 
 					startButton.setEnabled(true);
 				}
