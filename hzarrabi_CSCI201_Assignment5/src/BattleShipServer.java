@@ -346,7 +346,10 @@ public class BattleShipServer extends JFrame
 			opponentAttack(i, j);
 		}
 		//reseting the time because we both guessed TODO we may not have to do this because other person guesses we send attack coordinates (and reset)
-		else if(theCommand[0].equals("resetTime"));
+		else if(theCommand[0].equals("chat"))
+		{
+			log.append(theCommand[1]);
+		}
 		//resetting game because you won
 		else if(theCommand[0].equals("reset"));
 		else if(theCommand[0].equals("start")) startFunction();
@@ -562,6 +565,18 @@ public class BattleShipServer extends JFrame
 	//action listeners for the menus
 	private void menuListeners()
 	{
+		sendButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				log.append(chatField.getText());
+				pw.println("chat:"+chatField.getText()+"\n ");
+				chatField.setText("");
+			}
+		});
+		
 		howToMenu.addActionListener(new ActionListener()
 		{
 			
@@ -572,6 +587,7 @@ public class BattleShipServer extends JFrame
 				
 			}
 		});
+		
 		
 		aboutMenu.addActionListener(new ActionListener()
 		{
