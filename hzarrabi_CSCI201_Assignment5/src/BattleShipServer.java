@@ -178,6 +178,12 @@ public class BattleShipServer extends JFrame
 	JTextField chatField;
 	JButton sendButton;
 	String oppName="Computer";
+	int oppAircraft=0;
+	int oppCarriers=0;
+	int oppBattlships=0;
+	int oppCruisers=0;
+	int oppDestroyers=0;
+	
 	JLabel oppLabel= new JLabel("                                             COMPUTER");
 	
 	public BattleShipServer(Socket s, String name)
@@ -217,6 +223,7 @@ public class BattleShipServer extends JFrame
 						 "The other player has quit!", "Connection Error",JOptionPane.DEFAULT_OPTION,  JOptionPane.ERROR_MESSAGE, null, null, null);
 					    if(PromptResult==0)
 					    {
+					      new StartMenu();
 					      System.exit(0);          
 					    }
 						break;
@@ -235,7 +242,7 @@ public class BattleShipServer extends JFrame
 		setLayout(new BorderLayout());
 		setSize(690,460);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		JPanel north=new JPanel(new FlowLayout(FlowLayout.CENTER));
 		north.setAlignmentX(100);
@@ -376,7 +383,7 @@ public class BattleShipServer extends JFrame
 		else if(theCommand[0].equals("start")) startFunction();
 		else if(theCommand[0].equals("quit"))
 		{
-			System.out.println("someone quit");
+			System.out.println("did you catch the other quit?");
 			int PromptResult = JOptionPane.showOptionDialog(null, 
 			 "The other player has quit!", "Connection Error",JOptionPane.DEFAULT_OPTION,  JOptionPane.ERROR_MESSAGE, null, null, null);
 		    if(PromptResult==0)
@@ -412,48 +419,50 @@ public class BattleShipServer extends JFrame
 				String theShip="";
 				if(theChar=='A')
 				{
-					playerCarriers++;
+					oppAircraft++;
 					theShip="AirCraft";
-					if(playerCarriers==5)
+					if(oppAircraft==5)
 					{
-						log.append("Player sank an AircraftCarrier!\n");
-						playerCarriers++;
+						log.append("Opponent sank an AircraftCarrier!\n");
+						oppAircraft++;
 						append=false;
 					}
 				}
 				else if(theChar=='B')
 				{
-					playerBattlships++;
+					oppBattlships++;
 					theShip="BattleShip";
-					if(playerBattlships==4)
+					if(oppBattlships==4)
 					{
-						log.append("Player sank a BattleShip!\n");
-						playerBattlships++;
+						log.append("Opponent sank a BattleShip!\n");
+						oppBattlships++;
 						append=false;
 					}
 				}
 				else if(theChar=='C')
 				{
-					playerCruisers++;
+					oppCruisers++;
 					theShip="Carrier";
-					if(playerCruisers==3)
+					if(oppCruisers==3)
 					{
-						log.append("Player sank a Cruiser!\n");
-						playerCruisers++;
+						log.append("Opponent sank a Cruiser!\n");
+						oppCruisers++;
 						append=false;
 					}
 				}
-				else if(theChar=='D')
+				else if(theChar=='D'||theChar=='E')
 				{
-					playerDestroyers++;
+					oppDestroyers++;
 					theShip="Destroyer";
-					if(playerDestroyers==2)
+					if(oppDestroyers==2)
 					{
-						log.append("Player sank a Carrier!\n");
-						playerDestroyers=0;
+						log.append("Opponent sank a Carrier!\n");
+						oppDestroyers=0;
 						append=false;
 					}
 				}
+				
+
 				
 				String theSecond="0:";
 				if(seconds<10)theSecond="0:0";
@@ -466,7 +475,7 @@ public class BattleShipServer extends JFrame
 				if(compHits>=16)
 				{
 					time.stop();
-					new winnerWindow("You");
+					new winnerWindow("Opponent");
 				}
 				else
 				{
@@ -597,16 +606,23 @@ public class BattleShipServer extends JFrame
 	//action listeners for the menus
 	private void menuListeners()
 	{
-		/*addWindowListener(new WindowAdapter()
-		{
-			public void notDefaultClose(ActionEvent e)
-			{
-				pw.println("quit:");
-				System.out.println("someone just quit");
-				dispose();
+		addWindowListener(new WindowAdapter(){
+			@Override
+			public void windowClosing(WindowEvent e) {
+				pw.println("quit:asf");
+				System.out.println("sent quit");
+				try
+				{
+					s.close();
+				} catch (IOException e1)
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				System.exit(0);
 			}
-		});*/
-		
+
+		});
 		
 		sendButton.addActionListener(new ActionListener()
 		{

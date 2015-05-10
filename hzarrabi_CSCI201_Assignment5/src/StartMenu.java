@@ -105,6 +105,7 @@ public class StartMenu extends JFrame
 		YourNameLabel = new JLabel("Name:");
 		
 		YourNameField = new JTextField();
+		YourNameField.setText("YourName");
 		YourNameField.setColumns(10);
 		
 		HostGameCheckBox = new JCheckBox("Host Game");
