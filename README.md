@@ -10,7 +10,7 @@ Assingment #2: Exploring GUI: An exposure to Java AWT/Swing with Battleship
 
 Assingment #3: Multiplayer with Computer
 
-Assingment #4: Timer with added asthetics, sounds, and animation multithreading
+Assingment #4: Timer with added aesthetics, sounds, and animation multithreading
 
 Assingment #5:  Implemented networking with true networking, server, clients
 
